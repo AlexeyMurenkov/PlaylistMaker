@@ -20,6 +20,7 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/find"
             android:text="@string/search"
             android:backgroundTint="@color/yp_white"
             android:textColor="@color/yp_black"
@@ -36,6 +37,7 @@
             app:cornerRadius="@dimen/main_button_corner_radius" />
 
         <Button
+            android:id="@+id/media"
             android:text="@string/media"
             android:backgroundTint="@color/yp_white"
             android:textColor="@color/yp_black"
@@ -52,6 +54,7 @@
             app:cornerRadius="@dimen/main_button_corner_radius" />
 
         <Button
+            android:id="@+id/settings"
             android:text="@string/settings"
             android:backgroundTint="@color/yp_white"
             android:textColor="@color/yp_black"
