@@ -2,29 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/yp_white"
     android:padding="@dimen/activity_padding"
     android:orientation="vertical">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/settings_back"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/settings_back"
-            android:layout_width="@dimen/main_button_icon_size"
-            android:layout_height="@dimen/main_button_icon_size"
-            android:src="@drawable/arrow_back"
-            android:layout_margin="@dimen/main_icon_padding"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/settings"
-            android:gravity="center_vertical"
-            android:textSize="@dimen/main_text_size"
-            android:textColor="@color/yp_black" />
-
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:text="@string/settings"
+        android:textSize="@dimen/main_text_size"
+        android:layout_margin="8dp"
+        android:textColor="@color/yp_black"
+        android:drawablePadding="@dimen/main_icon_padding"
+        app:drawableLeftCompat="@drawable/arrow_back" />
 
     <Switch
         android:layout_width="match_parent"
@@ -34,64 +26,31 @@
         android:layout_margin="@dimen/settings_item_margin"
         android:textSize="@dimen/settings_text_size"/>
 
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/settings_item_margin" >
+        android:text="@string/share"
+        android:textColor="@color/yp_black"
+        android:textSize="@dimen/settings_text_size"
+        android:layout_margin="@dimen/settings_item_margin"
+        app:drawableRightCompat="@drawable/share" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/share"
-            android:textColor="@color/yp_black"
-            android:textSize="@dimen/settings_text_size" />
-        <ImageView
-            android:layout_width="@dimen/main_button_icon_size"
-            android:layout_height="@dimen/main_button_icon_size"
-            android:src="@drawable/share" />
-
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/settings_item_margin" >
+        android:text="@string/support"
+        android:textColor="@color/yp_black"
+        android:textSize="@dimen/settings_text_size"
+        android:layout_margin="@dimen/settings_item_margin"
+        app:drawableRightCompat="@drawable/support" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/support"
-            android:textColor="@color/yp_black"
-            android:textSize="@dimen/settings_text_size" />
-        <ImageView
-            android:layout_width="@dimen/main_button_icon_size"
-            android:layout_height="@dimen/main_button_icon_size"
-            android:src="@drawable/support" />
-
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/settings_item_margin" >
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/user_agreement"
-            android:textColor="@color/yp_black"
-            android:textSize="@dimen/settings_text_size" />
-        <ImageView
-            android:layout_width="@dimen/main_button_icon_size"
-            android:layout_height="@dimen/main_button_icon_size"
-            android:src="@drawable/arrow_forward" />
-
-    </LinearLayout>
+        android:text="@string/user_agreement"
+        android:textColor="@color/yp_black"
+        android:textSize="@dimen/settings_text_size"
+        android:layout_margin="@dimen/settings_item_margin"
+        app:drawableRightCompat="@drawable/arrow_forward" />
 
 </LinearLayout>

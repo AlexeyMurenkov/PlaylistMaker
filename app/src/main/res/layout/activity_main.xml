@@ -22,6 +22,7 @@
         <Button
             android:id="@+id/find"
             android:text="@string/search"
+            android:textAllCaps="false"
             android:backgroundTint="@color/yp_white"
             android:textColor="@color/yp_black"
             android:textSize="@dimen/main_text_size"
@@ -39,6 +40,7 @@
         <Button
             android:id="@+id/media"
             android:text="@string/media"
+            android:textAllCaps="false"
             android:backgroundTint="@color/yp_white"
             android:textColor="@color/yp_black"
             android:textSize="@dimen/main_text_size"
@@ -56,6 +58,7 @@
         <Button
             android:id="@+id/settings"
             android:text="@string/settings"
+            android:textAllCaps="false"
             android:backgroundTint="@color/yp_white"
             android:textColor="@color/yp_black"
             android:textSize="@dimen/main_text_size"
