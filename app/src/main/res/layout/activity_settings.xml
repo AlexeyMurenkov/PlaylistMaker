@@ -18,16 +18,19 @@
         android:text="@string/dark_theme" />
 
     <TextView
+        android:id="@+id/settings_share_app"
         style="@style/activity_settings_item"
         android:text="@string/share"
         app:drawableRightCompat="@drawable/share" />
 
     <TextView
+        android:id="@+id/settings_support"
         style="@style/activity_settings_item"
         android:text="@string/support"
         app:drawableRightCompat="@drawable/support" />
 
     <TextView
+        android:id="@+id/settings_agreement"
         style="@style/activity_settings_item"
         android:text="@string/user_agreement"
         app:drawableRightCompat="@drawable/arrow_forward" />
