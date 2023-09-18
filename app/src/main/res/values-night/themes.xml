@@ -1,11 +1,20 @@
 <resources>
+
     <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/yp_black</item>
         <item name="colorOnPrimary">@color/yp_white</item>
-        <item name="colorPrimaryVariant">@color/yp_blue_light</item>
+        <item name="colorPrimaryVariant">@color/yp_white</item>
 
-        <item name="colorSecondary">@color/yp_black</item>
-        <item name="colorOnSecondary">@color/yp_white</item>
-        <item name="colorSecondaryVariant">@color/yp_white</item>
+        <item name="colorSecondary">@color/yp_blue_light</item>
+        <item name="colorOnSecondary">@color/yp_blue</item>
+
+        <item name="colorSurface">@color/yp_white</item>
+        <item name="colorOnSurface">@color/yp_black</item>
+        <item name="colorSurfaceVariant">@color/yp_black</item>
     </style>
+
+    <style name="Base.Theme.PlaylistMaker.Main" parent="Base.Theme.PlaylistMaker">
+        <item name="colorPrimary">@color/yp_black</item>
+    </style>
+
 </resources>

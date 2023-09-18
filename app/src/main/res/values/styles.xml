@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="activity_top_line">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -7,9 +8,10 @@
         <item name="android:textSize">@dimen/main_text_size</item>
         <item name="android:drawablePadding">@dimen/main_icon_padding</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
-    <style name="activity_main_button" parent="Widget.MaterialComponents.Button">
+    <style name="activity_main_button" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_margin">@dimen/main_button_margin</item>
         <item name="android:layout_height">0dp</item>
@@ -32,7 +34,35 @@
         <item name="android:layout_margin">@dimen/settings_item_margin</item>
         <item name="android:textSize">@dimen/settings_text_size</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
-        <item name="android:textColor">?attr/colorOnSecondary</item>
-        <item name="drawableTint">?attr/colorSecondaryVariant</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:trackTint">?attr/colorSecondary</item>
+        <item name="android:thumbTint">?attr/colorOnSecondary</item>
+        <item name="drawableTint">?attr/colorPrimaryVariant</item>
+
+    </style>
+
+    <style name="edit_text_single_line">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">36dp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textColorHint">?attr/colorSurfaceVariant</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:background">@drawable/edit_text</item>
+        <item name="android:drawablePadding">@dimen/edit_text_drawable_padding</item>
+        <item name="android:textCursorDrawable">@drawable/edit_text_cursor</item>
+        <item name="drawableTint">?attr/colorSurfaceVariant</item>
+    </style>
+
+    <style name="cross_on_edit_text">
+        <item name="android:layout_width">@dimen/edit_text_icon_size</item>
+        <item name="android:layout_height">@dimen/edit_text_icon_size</item>
+        <item name="android:layout_margin">@dimen/edit_text_icon_size</item>
+        <item name="android:layout_gravity">center_vertical|end</item>
+        <item name="android:src">@drawable/cross</item>
+        <item name="tint">?attr/colorSurfaceVariant</item>
     </style>
 </resources>

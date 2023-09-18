@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
 
         val buttonFind = findViewById<Button>(R.id.find)
         buttonFind.setOnClickListener {
-            startActivity(Intent(this, FindActivity::class.java))
+            startActivity(Intent(this, SearchActivity::class.java))
         }
 
         val buttonMedia = findViewById<Button>(R.id.media)
