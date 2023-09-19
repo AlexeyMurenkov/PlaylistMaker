@@ -10,6 +10,11 @@ import android.widget.ImageView
 import android.widget.TextView
 
 class SearchActivity : AppCompatActivity() {
+
+    companion object {
+        const val SEARCH_TEXT = "SEARCH_TEXT"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -19,10 +24,15 @@ class SearchActivity : AppCompatActivity() {
             finish()
         }
 
-        val searchText = findViewById<EditText>(R.id.search_text)
+        val searchEditText = findViewById<EditText>(R.id.search_text)
+        if (savedInstanceState != null) {
+            val restoredText = savedInstanceState.getString(SEARCH_TEXT)
+            searchEditText.setText(restoredText)
+        }
+
         val searchClear = findViewById<ImageView>(R.id.search_clear)
         searchClear.setOnClickListener {
-            searchText.setText("")
+            searchEditText.setText("")
         }
 
         val searchTextWatcher = object : TextWatcher {
@@ -39,7 +49,12 @@ class SearchActivity : AppCompatActivity() {
             }
 
         }
-        searchText.addTextChangedListener(searchTextWatcher)
+        searchEditText.addTextChangedListener(searchTextWatcher)
+    }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val searchEditText = findViewById<EditText>(R.id.search_text)
+        outState.putString(SEARCH_TEXT, searchEditText.text.toString())
     }
 }
