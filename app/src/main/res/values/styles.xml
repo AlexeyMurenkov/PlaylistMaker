@@ -9,6 +9,7 @@
         <item name="android:drawablePadding">@dimen/main_icon_padding</item>
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="drawableTint">?attr/colorOnPrimary</item>
     </style>
 
     <style name="activity_main_button" parent="Widget.MaterialComponents.Button.UnelevatedButton">
