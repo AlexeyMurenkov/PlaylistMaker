@@ -26,6 +26,7 @@
 
         <ImageView
             android:id="@+id/search_clear"
-            style="@style/cross_on_edit_text" />
+            style="@style/cross_on_edit_text"
+            android:visibility="invisible" />
     </FrameLayout>
 </LinearLayout>
