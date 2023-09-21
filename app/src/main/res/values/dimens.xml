@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="activity_padding">8dp</dimen>
+    <dimen name="dimen_8">8dp</dimen>
+    <dimen name="dimen_12">12dp</dimen>
+    <dimen name="dimen_16">16dp</dimen>
+    <dimen name="dimen_24">24dp</dimen>
 
-    <dimen name="main_text_size">20sp</dimen>
-    <dimen name="main_button_margin">8dp</dimen>
-    <dimen name="main_button_icon_size">24dp</dimen>
-    <dimen name="main_button_corner_radius">16dp</dimen>
-    <dimen name="main_icon_padding">12dp</dimen>
-
-    <dimen name="settings_text_size">16sp</dimen>
-    <dimen name="settings_item_margin">16dp</dimen>
-
-    <dimen name="edit_text_drawable_padding">8dp</dimen>
-    <dimen name="edit_text_icon_size">16dp</dimen>
+    <dimen name="dimen16sp">16sp</dimen>
+    <dimen name="dimen_20sp">20sp</dimen>
 </resources>

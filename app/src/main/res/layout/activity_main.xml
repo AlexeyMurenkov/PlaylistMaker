@@ -6,7 +6,7 @@
     android:background="?attr/colorPrimary"
     android:orientation="vertical"
     android:theme="@style/Base.Theme.PlaylistMaker.Main"
-    android:padding="@dimen/activity_padding" >
+    android:padding="@dimen/dimen_8" >
 
     <TextView
         style="@style/activity_top_line"
@@ -18,19 +18,19 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/find"
+            android:id="@+id/activity_main_search"
             style="@style/activity_main_button"
             android:text="@string/search"
             app:icon="@drawable/search" />
 
         <Button
-            android:id="@+id/media"
+            android:id="@+id/activity_main_media"
             style="@style/activity_main_button"
             android:text="@string/media"
             app:icon="@drawable/media" />
 
         <Button
-            android:id="@+id/settings"
+            android:id="@+id/activity_main_settings"
             style="@style/activity_main_button"
             android:text="@string/settings"
             app:icon="@drawable/settings" />

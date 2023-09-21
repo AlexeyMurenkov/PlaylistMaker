@@ -10,17 +10,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val buttonFind = findViewById<Button>(R.id.find)
+        val buttonFind = findViewById<Button>(R.id.activity_main_search)
         buttonFind.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
         }
 
-        val buttonMedia = findViewById<Button>(R.id.media)
+        val buttonMedia = findViewById<Button>(R.id.activity_main_media)
         buttonMedia.setOnClickListener{
             startActivity(Intent(this, MediaActivity::class.java))
         }
 
-        val buttonSettings = findViewById<Button>(R.id.settings)
+        val buttonSettings = findViewById<Button>(R.id.activity_main_settings)
         buttonSettings.setOnClickListener{
             startActivity(Intent(this, SettingsActivity::class.java))
         }
