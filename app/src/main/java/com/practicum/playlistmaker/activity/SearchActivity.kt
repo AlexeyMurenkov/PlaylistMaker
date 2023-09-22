@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker
+package com.practicum.playlistmaker.activity
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +10,10 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.mock.ListTrack
+import com.practicum.playlistmaker.track.TrackAdapter
 
 class SearchActivity : AppCompatActivity() {
 
@@ -49,6 +53,9 @@ class SearchActivity : AppCompatActivity() {
 
         }
         searchEditText.addTextChangedListener(searchTextWatcher)
+
+        val searchTracks = findViewById<RecyclerView>(R.id.search_tracks)
+        searchTracks.adapter = TrackAdapter(ListTrack.tracks)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
