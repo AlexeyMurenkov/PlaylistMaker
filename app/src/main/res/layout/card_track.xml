@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/dimen_8">
+
+    <LinearLayout style="@style/card_track_linear_layout">
+
+        <ImageView
+            android:id="@+id/track_image"
+            style="@style/card_track_image"
+            tools:src="@drawable/track_placeholder"/>
+
+        <LinearLayout style="@style/card_track_linear_layout.vertical">
+
+            <TextView
+                android:id="@+id/track_name"
+                style="@style/card_track_text"
+                tools:text="Yesterday (Remastered 2009)" />
+
+            <LinearLayout style="@style/card_track_linear_layout">
+
+                <TextView
+                    android:id="@+id/track_artist"
+                    style="@style/card_track_text.artist"
+                    tools:text="The Beatles Очень очень Очень Очень Очень Длинный Текст шщвышао шщомвщышошщ шщвыаг" />
+
+                <TextView
+                    android:id="@+id/track_time"
+                    style="@style/card_track_text.time"
+                    tools:text="2:55" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ImageView style="@style/card_track_arrow" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
