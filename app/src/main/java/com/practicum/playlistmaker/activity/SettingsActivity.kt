@@ -4,36 +4,33 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        val binding = ActivitySettingsBinding.inflate(layoutInflater)
 
-        val back = findViewById<TextView>(R.id.settings_back)
-        back.setOnClickListener {
-            finish()
-        }
+        with(binding) {
+            setContentView(root)
 
-        val shareApp = findViewById<TextView>(R.id.settings_share_app)
-        shareApp.setOnClickListener {
-            shareApp()
-        }
-
-        val support = findViewById<TextView>(R.id.settings_support)
-        support.setOnClickListener {
-            mailToSupport()
-        }
-
-        val agreement = findViewById<TextView>(R.id.settings_agreement)
-        agreement.setOnClickListener {
-            showAgreement()
+            settingsBack.setOnClickListener {
+                finish()
+            }
+            settingsShareApp.setOnClickListener {
+                shareApp()
+            }
+            settingsSupport.setOnClickListener {
+                mailToSupport()
+            }
+            settingsAgreement.setOnClickListener {
+                showAgreement()
+            }
         }
     }
 
-    fun shareApp() {
+    private fun shareApp() {
         val intent = Intent(Intent.ACTION_SEND)
         intent
             .putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app_text))
@@ -41,7 +38,7 @@ class SettingsActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun mailToSupport() {
+    private fun mailToSupport() {
         val intent = Intent(Intent.ACTION_SENDTO)
         intent
             .setData(Uri.parse("mailto:"))
@@ -51,7 +48,7 @@ class SettingsActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun showAgreement() {
+    private fun showAgreement() {
         val intent = Intent(Intent.ACTION_VIEW)
         intent
             .setData(Uri.parse(getString(R.string.agreement)))
