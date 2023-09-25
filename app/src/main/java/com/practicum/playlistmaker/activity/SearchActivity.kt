@@ -9,42 +9,54 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
-import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.mock.ListTrack
 import com.practicum.playlistmaker.track.TrackAdapter
 
 class SearchActivity : AppCompatActivity() {
 
-    companion object {
-        const val SEARCH_TEXT = "SEARCH_TEXT"
-    }
+    private lateinit var binding: ActivitySearchBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search)
+        binding = ActivitySearchBinding.inflate(layoutInflater)
 
-        val back = findViewById<TextView>(R.id.search_back)
-        back.setOnClickListener {
-            finish()
+        with(binding) {
+            setContentView(root)
+
+            searchBack.setOnClickListener {
+                finish()
+            }
+
+            initSearchEditText(searchText, searchClear)
+
+            searchTracks.adapter = TrackAdapter(ListTrack.tracks)
         }
+    }
 
-        val searchEditText = findViewById<EditText>(R.id.search_text)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(SEARCH_TEXT, binding.searchText.toString())
+    }
 
-        val searchClear = findViewById<ImageView>(R.id.search_clear)
-        searchClear.setOnClickListener {
-            searchEditText.setText("")
-            hideKeyboard(searchEditText)
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        val restoredText = savedInstanceState.getString(SEARCH_TEXT)
+        binding.searchText.setText(restoredText)
+    }
+
+    private fun initSearchEditText(editText: EditText, clear: ImageView) {
+        clear.setOnClickListener {
+            editText.setText("")
+            hideKeyboard(editText)
         }
-
         val searchTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                searchClear.visibility = if (s.isNullOrEmpty()) View.INVISIBLE else View.VISIBLE
+                clear.visibility = if (s.isNullOrEmpty()) View.INVISIBLE else View.VISIBLE
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -52,27 +64,15 @@ class SearchActivity : AppCompatActivity() {
             }
 
         }
-        searchEditText.addTextChangedListener(searchTextWatcher)
-
-        val searchTracks = findViewById<RecyclerView>(R.id.search_tracks)
-        searchTracks.adapter = TrackAdapter(ListTrack.tracks)
+        editText.addTextChangedListener(searchTextWatcher)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        val searchEditText = findViewById<EditText>(R.id.search_text)
-        outState.putString(SEARCH_TEXT, searchEditText.text.toString())
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        val searchEditText = findViewById<EditText>(R.id.search_text)
-        val restoredText = savedInstanceState.getString(SEARCH_TEXT)
-        searchEditText.setText(restoredText)
-    }
-
-    fun hideKeyboard(view: View) {
+    private fun hideKeyboard(view: View) {
         val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+
+    companion object {
+        const val SEARCH_TEXT = "SEARCH_TEXT"
     }
 }
