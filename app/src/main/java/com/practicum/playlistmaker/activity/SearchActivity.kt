@@ -6,14 +6,31 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
+import com.practicum.playlistmaker.api.ITunesSearchApi
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
-import com.practicum.playlistmaker.mock.ListTrack
 import com.practicum.playlistmaker.track.TrackAdapter
+import com.practicum.playlistmaker.track.TracksResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
+
+    private val baseUrl = "https://itunes.apple.com"
+
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    private val searchService = retrofit.create(ITunesSearchApi::class.java)
 
     private lateinit var binding: ActivitySearchBinding
 
@@ -30,7 +47,12 @@ class SearchActivity : AppCompatActivity() {
 
             initSearchEditText(searchText, searchClear)
 
-            searchTracks.adapter = TrackAdapter(ListTrack.tracks)
+            searchText.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    actionSearch()
+                }
+                false
+            }
         }
     }
 
@@ -43,6 +65,31 @@ class SearchActivity : AppCompatActivity() {
         super.onRestoreInstanceState(savedInstanceState)
         val restoredText = savedInstanceState.getString(SEARCH_TEXT)
         binding.searchText.setText(restoredText)
+    }
+
+    private fun actionSearch() {
+        val searchText = binding.searchText.text.toString()
+        if (searchText.isNotEmpty()) {
+            searchService.search(searchText).enqueue(object : Callback<TracksResponse> {
+                override fun onResponse(
+                    call: Call<TracksResponse>,
+                    response: Response<TracksResponse>
+                ) {
+                    if (response.code() == 200) {
+                        val tracks = response.body()?.results
+                        if (tracks != null) {
+                            binding.searchTracks.adapter = TrackAdapter(tracks)
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
+                    Toast.makeText(applicationContext, "Failure", Toast.LENGTH_LONG)
+                        .show()
+                }
+
+            })
+        }
     }
 
     private fun initSearchEditText(editText: EditText, clear: ImageView) {

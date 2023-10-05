@@ -22,7 +22,9 @@
             style="@style/edit_text_single_line"
             android:hint="@string/search"
             android:inputType="text"
-            app:drawableLeftCompat="@drawable/search" />
+            app:drawableLeftCompat="@drawable/search"
+            android:imeOptions="actionDone"
+            android:singleLine="true" />
 
         <ImageView
             android:id="@+id/search_clear"
