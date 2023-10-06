@@ -6,11 +6,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.Toast
+import androidx.core.view.children
 import com.practicum.playlistmaker.api.ITunesSearchApi
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.track.TrackAdapter
@@ -53,12 +54,18 @@ class SearchActivity : AppCompatActivity() {
                 }
                 false
             }
+
+            searchRefresh.setOnClickListener {
+                actionSearch()
+            }
+
+            hideChildren(searchResults)
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(SEARCH_TEXT, binding.searchText.toString())
+        outState.putString(SEARCH_TEXT, binding.searchText.text.toString())
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
@@ -69,6 +76,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun actionSearch() {
         val searchText = binding.searchText.text.toString()
+        hideChildren(binding.searchResults)
         if (searchText.isNotEmpty()) {
             searchService.search(searchText).enqueue(object : Callback<TracksResponse> {
                 override fun onResponse(
@@ -76,25 +84,34 @@ class SearchActivity : AppCompatActivity() {
                     response: Response<TracksResponse>
                 ) {
                     if (response.code() == 200) {
-                        val tracks = response.body()?.results
-                        if (tracks != null) {
+                        val tracks = response.body()?.results!!
+                        if (tracks.isNotEmpty()) {
                             binding.searchTracks.adapter = TrackAdapter(tracks)
+                            binding.searchTracks.visibility = View.VISIBLE
+                        } else {
+                            binding.searchNotFound.visibility = View.VISIBLE
                         }
+                    } else {
+                        binding.searchConnError.visibility = View.VISIBLE
                     }
                 }
 
                 override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
-                    Toast.makeText(applicationContext, "Failure", Toast.LENGTH_LONG)
-                        .show()
+                    binding.searchConnError.visibility = View.VISIBLE
                 }
 
             })
         }
     }
 
+    private fun hideChildren(parent: ViewGroup) {
+        parent.children.forEach { child -> child.visibility = View.GONE }
+    }
+
     private fun initSearchEditText(editText: EditText, clear: ImageView) {
         clear.setOnClickListener {
             editText.setText("")
+            hideChildren(binding.searchResults)
             hideKeyboard(editText)
         }
         val searchTextWatcher = object : TextWatcher {
