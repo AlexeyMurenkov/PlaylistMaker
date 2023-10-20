@@ -13,7 +13,8 @@
         android:text="@string/settings"
         app:drawableLeftCompat="@drawable/arrow_back" />
 
-    <Switch
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/settings_darkTheme"
         style="@style/activity_settings_item"
         android:text="@string/dark_theme" />
 

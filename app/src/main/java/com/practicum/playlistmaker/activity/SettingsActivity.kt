@@ -4,8 +4,13 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatDelegate
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
+import com.practicum.playlistmaker.utils.switchTheme
+
+const val SETTINGS_PREFERENCES = "settings_preferences"
+const val DARK_THEME = "dark_theme"
 
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,6 +31,15 @@ class SettingsActivity : AppCompatActivity() {
             }
             settingsAgreement.setOnClickListener {
                 showAgreement()
+            }
+            settingsDarkTheme.isChecked =
+                AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
+            settingsDarkTheme.setOnCheckedChangeListener { _, checked ->
+                switchTheme(checked)
+                getSharedPreferences(SETTINGS_PREFERENCES, MODE_PRIVATE)
+                    .edit()
+                    .putBoolean(DARK_THEME, checked)
+                    .apply()
             }
         }
     }

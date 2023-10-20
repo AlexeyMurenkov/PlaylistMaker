@@ -36,10 +36,8 @@
         <item name="android:textSize">@dimen/medium_font_size</item>
         <item name="android:fontFamily">@font/ys_display_regular</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
-        <item name="android:trackTint">?attr/colorSecondary</item>
-        <item name="android:thumbTint">?attr/colorOnSecondary</item>
-        <item name="drawableTint">?attr/colorPrimaryVariant</item>
-
+        <item name="trackTint">?attr/colorSecondary</item>
+        <item name="thumbTint">?attr/colorOnSecondary</item>
     </style>
 
     <style name="edit_text_single_line">
