@@ -9,9 +9,6 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivitySettingsBinding
 import com.practicum.playlistmaker.utils.switchTheme
 
-const val SETTINGS_PREFERENCES = "settings_preferences"
-const val DARK_THEME = "dark_theme"
-
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,5 +64,10 @@ class SettingsActivity : AppCompatActivity() {
         intent
             .setData(Uri.parse(getString(R.string.agreement)))
         startActivity(intent)
+    }
+
+    companion object {
+        const val SETTINGS_PREFERENCES = "settings_preferences"
+        const val DARK_THEME = "dark_theme"
     }
 }
