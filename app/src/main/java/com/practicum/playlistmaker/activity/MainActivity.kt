@@ -4,8 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
-import com.practicum.playlistmaker.activity.SettingsActivity.Companion.DARK_THEME
-import com.practicum.playlistmaker.activity.SettingsActivity.Companion.SETTINGS_PREFERENCES
+import com.practicum.playlistmaker.activity.SettingsActivity.Companion.KEY_DARK_THEME
+import com.practicum.playlistmaker.activity.SettingsActivity.Companion.NAME_SETTINGS_PREFERENCES
 import com.practicum.playlistmaker.databinding.ActivityMainBinding
 import com.practicum.playlistmaker.utils.switchTheme
 
@@ -28,9 +28,9 @@ class MainActivity : AppCompatActivity() {
             }
 
             switchTheme(
-                getSharedPreferences(SETTINGS_PREFERENCES, MODE_PRIVATE)
+                getSharedPreferences(NAME_SETTINGS_PREFERENCES, MODE_PRIVATE)
                     .getBoolean(
-                        DARK_THEME,
+                        KEY_DARK_THEME,
                         AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
                     )
             )

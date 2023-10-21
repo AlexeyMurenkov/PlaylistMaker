@@ -10,11 +10,12 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.children
-import com.practicum.playlistmaker.SearchHistory
+import com.practicum.playlistmaker.track.history.SearchHistory
 import com.practicum.playlistmaker.api.ITunesSearchApi
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.track.TrackAdapter
 import com.practicum.playlistmaker.track.TracksResponse
+import com.practicum.playlistmaker.track.history.HistoryTrackAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,7 +38,7 @@ class SearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivitySearchBinding.inflate(layoutInflater)
-        history = SearchHistory(getSharedPreferences(SEARCH_PREFERENCES, MODE_PRIVATE))
+        history = SearchHistory(getSharedPreferences(NAME_SEARCH_PREFERENCES, MODE_PRIVATE))
 
         with(binding) {
             setContentView(root)
@@ -59,7 +60,16 @@ class SearchActivity : AppCompatActivity() {
                 actionSearch()
             }
 
-            searchHistoryClear.setOnClickListener { clearSearchHistory() }
+            searchHistory.adapter = HistoryTrackAdapter(
+                history.history,
+                {
+                    history.add(it)
+                    searchHistory.adapter?.notifyDataSetChanged()
+                },
+                {
+                    clearSearchHistory()
+                }
+            )
 
             hideChildren(searchResults)
         }
@@ -67,18 +77,13 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(SEARCH_TEXT, binding.searchText.text.toString())
+        outState.putString(KEY_SEARCH_TEXT, binding.searchText.text.toString())
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        val restoredText = savedInstanceState.getString(SEARCH_TEXT)
+        val restoredText = savedInstanceState.getString(KEY_SEARCH_TEXT)
         binding.searchText.setText(restoredText)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        history.write()
     }
 
     private fun actionSearch() {
@@ -117,7 +122,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showSearchHistory() {
         with(binding) {
-            searchHistory.adapter = TrackAdapter(history.history)
+            searchHistory.adapter?.notifyDataSetChanged()
             searchHistoryGroup.visibility = View.VISIBLE
         }
     }
@@ -194,7 +199,7 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         private const val BASE_URL = "https://itunes.apple.com"
-        private const val SEARCH_TEXT = "search_text"
-        const val SEARCH_PREFERENCES = "settings_preferences"
+        private const val KEY_SEARCH_TEXT = "search_text"
+        const val NAME_SEARCH_PREFERENCES = "settings_preferences"
     }
 }

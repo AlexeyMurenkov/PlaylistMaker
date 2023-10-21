@@ -33,9 +33,9 @@ class SettingsActivity : AppCompatActivity() {
                 AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
             settingsDarkTheme.setOnCheckedChangeListener { _, checked ->
                 switchTheme(checked)
-                getSharedPreferences(SETTINGS_PREFERENCES, MODE_PRIVATE)
+                getSharedPreferences(NAME_SETTINGS_PREFERENCES, MODE_PRIVATE)
                     .edit()
-                    .putBoolean(DARK_THEME, checked)
+                    .putBoolean(KEY_DARK_THEME, checked)
                     .apply()
             }
         }
@@ -67,7 +67,7 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val SETTINGS_PREFERENCES = "settings_preferences"
-        const val DARK_THEME = "dark_theme"
+        const val NAME_SETTINGS_PREFERENCES = "settings_preferences"
+        const val KEY_DARK_THEME = "dark_theme"
     }
 }

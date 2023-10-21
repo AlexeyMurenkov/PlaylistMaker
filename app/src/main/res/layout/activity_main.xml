@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="?attr/colorPrimary"
     android:orientation="vertical"
-    android:theme="@style/Base.Theme.PlaylistMaker.Main"
     android:padding="@dimen/dimen_8" >
 
     <TextView

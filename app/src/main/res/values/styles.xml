@@ -88,13 +88,13 @@
         <item name="android:layout_margin">@dimen/dimen_24</item>
     </style>
 
-    <style name="card_track_linear_layout">
+    <style name="search_adapter_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">?attr/colorPrimary</item>
+        <item name="cardBackgroundColor">?attr/colorPrimary</item>
     </style>
 
-    <style name="card_track_linear_layout.vertical" parent="card_track_linear_layout">
+    <style name="card_track_linear_layout.vertical" parent="search_adapter_layout">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_weight">1</item>
