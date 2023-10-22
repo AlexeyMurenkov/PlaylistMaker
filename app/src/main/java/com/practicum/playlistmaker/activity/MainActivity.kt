@@ -3,7 +3,11 @@ package com.practicum.playlistmaker.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatDelegate
+import com.practicum.playlistmaker.activity.SettingsActivity.Companion.KEY_DARK_THEME
+import com.practicum.playlistmaker.activity.SettingsActivity.Companion.NAME_SETTINGS_PREFERENCES
 import com.practicum.playlistmaker.databinding.ActivityMainBinding
+import com.practicum.playlistmaker.utils.switchTheme
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,6 +26,14 @@ class MainActivity : AppCompatActivity() {
             mainSettings.setOnClickListener {
                 startActivity(Intent(it.context, SettingsActivity::class.java))
             }
+
+            switchTheme(
+                getSharedPreferences(NAME_SETTINGS_PREFERENCES, MODE_PRIVATE)
+                    .getBoolean(
+                        KEY_DARK_THEME,
+                        AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
+                    )
+            )
         }
     }
 }

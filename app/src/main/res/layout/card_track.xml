@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    style="@style/search_adapter_layout"
     android:padding="@dimen/dimen_8">
 
-    <LinearLayout style="@style/card_track_linear_layout">
+    <LinearLayout style="@style/search_adapter_layout">
 
         <ImageView
             android:id="@+id/track_image"
             style="@style/card_track_image"
-            tools:src="@drawable/track_placeholder"/>
+            tools:src="@drawable/track_placeholder" />
 
         <LinearLayout style="@style/card_track_linear_layout.vertical">
 
@@ -19,7 +18,7 @@
                 style="@style/card_track_text"
                 tools:text="Yesterday (Remastered 2009)" />
 
-            <LinearLayout style="@style/card_track_linear_layout">
+            <LinearLayout style="@style/search_adapter_layout">
 
                 <TextView
                     android:id="@+id/track_artist"

@@ -9,13 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ImageView
 import androidx.core.view.children
+import com.practicum.playlistmaker.track.history.SearchHistory
 import com.practicum.playlistmaker.api.ITunesSearchApi
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.track.TrackAdapter
 import com.practicum.playlistmaker.track.TracksResponse
+import com.practicum.playlistmaker.track.history.HistoryTrackAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,20 +24,21 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
-    private val baseUrl = "https://itunes.apple.com"
-
     private val retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl)
+        .baseUrl(BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
     private val searchService = retrofit.create(ITunesSearchApi::class.java)
 
     private lateinit var binding: ActivitySearchBinding
+    private lateinit var history: SearchHistory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivitySearchBinding.inflate(layoutInflater)
+        history = SearchHistory(getSharedPreferences(NAME_SEARCH_PREFERENCES, MODE_PRIVATE))
 
         with(binding) {
             setContentView(root)
@@ -46,7 +47,7 @@ class SearchActivity : AppCompatActivity() {
                 finish()
             }
 
-            initSearchEditText(searchText, searchClear)
+            initSearchEditText()
 
             searchText.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -59,18 +60,29 @@ class SearchActivity : AppCompatActivity() {
                 actionSearch()
             }
 
+            searchHistory.adapter = HistoryTrackAdapter(
+                history.history,
+                {
+                    history.add(it)
+                    searchHistory.adapter?.notifyDataSetChanged()
+                },
+                {
+                    clearSearchHistory()
+                }
+            )
+
             hideChildren(searchResults)
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(SEARCH_TEXT, binding.searchText.text.toString())
+        outState.putString(KEY_SEARCH_TEXT, binding.searchText.text.toString())
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        val restoredText = savedInstanceState.getString(SEARCH_TEXT)
+        val restoredText = savedInstanceState.getString(KEY_SEARCH_TEXT)
         binding.searchText.setText(restoredText)
     }
 
@@ -86,7 +98,11 @@ class SearchActivity : AppCompatActivity() {
                     if (response.code() == 200) {
                         val tracks = response.body()?.results!!
                         if (tracks.isNotEmpty()) {
-                            binding.searchTracks.adapter = TrackAdapter(tracks)
+                            binding.searchTracks.adapter = TrackAdapter(tracks) { track ->
+                                history.add(
+                                    track
+                                )
+                            }
                             binding.searchTracks.visibility = View.VISIBLE
                         } else {
                             binding.searchNotFound.visibility = View.VISIBLE
@@ -104,39 +120,86 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    private fun showSearchHistory() {
+        with(binding) {
+            searchHistory.adapter?.notifyDataSetChanged()
+            searchHistoryGroup.visibility = View.VISIBLE
+        }
+    }
+
+    private fun hideSearchHistory() {
+        binding.searchHistoryGroup.visibility = View.GONE
+    }
+
+    private fun clearSearchHistory() {
+        history.clear()
+        hideSearchHistory()
+    }
+
     private fun hideChildren(parent: ViewGroup) {
         parent.children.forEach { child -> child.visibility = View.GONE }
     }
 
-    private fun initSearchEditText(editText: EditText, clear: ImageView) {
-        clear.setOnClickListener {
-            editText.setText("")
-            hideChildren(binding.searchResults)
-            hideKeyboard(editText)
+    private fun initSearchEditText() {
+
+        with(binding) {
+            searchClear.setOnClickListener {
+                searchText.setText("")
+                hideChildren(binding.searchResults)
+                hideKeyboard(searchText)
+            }
+
+            searchText.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus && searchText.text.isEmpty() && !history.isEmpty()) {
+                    showSearchHistory()
+                } else {
+                    hideSearchHistory()
+                }
+            }
+
+            searchText.addTextChangedListener(
+                object : TextWatcher {
+                    override fun beforeTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence?,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
+                        if (s.isNullOrEmpty()) {
+                            searchClear.visibility = View.INVISIBLE
+                            if (!history.isEmpty()) showSearchHistory()
+                        } else {
+                            searchClear.visibility = View.VISIBLE
+                            hideSearchHistory()
+                        }
+                    }
+
+                    override fun afterTextChanged(s: Editable?) {
+
+                    }
+                }
+            )
         }
-        val searchTextWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                clear.visibility = if (s.isNullOrEmpty()) View.INVISIBLE else View.VISIBLE
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-
-        }
-        editText.addTextChangedListener(searchTextWatcher)
     }
 
     private fun hideKeyboard(view: View) {
-        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     companion object {
-        const val SEARCH_TEXT = "SEARCH_TEXT"
+        private const val BASE_URL = "https://itunes.apple.com"
+        private const val KEY_SEARCH_TEXT = "search_text"
+        const val NAME_SEARCH_PREFERENCES = "settings_preferences"
     }
 }
