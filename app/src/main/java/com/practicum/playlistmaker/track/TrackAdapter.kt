@@ -2,15 +2,15 @@ package com.practicum.playlistmaker.track
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.util.Consumer
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.utils.dpToPx
+import java.util.function.BiConsumer
 
 open class TrackAdapter(
     private val tracks: List<Track>,
-    private val onTrackClick: Consumer<Track>
+    private val onTrackClick: BiConsumer<Track, Int>
 ) : Adapter<ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val imageCornersPx = parent
@@ -32,7 +32,7 @@ open class TrackAdapter(
             with(holder) {
                 bind(track)
                 itemView.setOnClickListener {
-                    onTrackClick.accept(track)
+                    onTrackClick.accept(track, position)
                 }
             }
         }
