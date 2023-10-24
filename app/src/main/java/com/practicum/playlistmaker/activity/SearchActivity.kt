@@ -62,9 +62,14 @@ class SearchActivity : AppCompatActivity() {
 
             searchHistory.adapter = HistoryTrackAdapter(
                 history.history,
-                {
-                    history.add(it)
-                    searchHistory.adapter?.notifyDataSetChanged()
+                {   track, position ->
+                    with(searchHistory) {
+                        adapter?.notifyItemRemoved(position)
+                        adapter?.notifyItemInserted(0)
+                        adapter?.notifyItemRangeChanged(position, adapter!!.itemCount)
+                        scrollToPosition(0)
+                    }
+                    history.add(track)
                 },
                 {
                     clearSearchHistory()
@@ -98,7 +103,7 @@ class SearchActivity : AppCompatActivity() {
                     if (response.code() == 200) {
                         val tracks = response.body()?.results!!
                         if (tracks.isNotEmpty()) {
-                            binding.searchTracks.adapter = TrackAdapter(tracks) { track ->
+                            binding.searchTracks.adapter = TrackAdapter(tracks) { track, _ ->
                                 history.add(
                                     track
                                 )

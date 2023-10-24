@@ -3,15 +3,15 @@ package com.practicum.playlistmaker.track.history
 import android.view.LayoutInflater
 import android.view.View.OnClickListener
 import android.view.ViewGroup
-import androidx.core.util.Consumer
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.track.Track
 import com.practicum.playlistmaker.track.TrackAdapter
+import java.util.function.BiConsumer
 
 class HistoryTrackAdapter(
     tracks: List<Track>,
-    onTrackClick: Consumer<Track>,
+    onTrackClick: BiConsumer<Track, Int>,
     val onClearClick: OnClickListener
 ) : TrackAdapter(tracks, onTrackClick) {
 
