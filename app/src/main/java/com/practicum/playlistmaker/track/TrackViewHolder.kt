@@ -1,6 +1,5 @@
 package com.practicum.playlistmaker.track
 
-import android.icu.text.SimpleDateFormat
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -8,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
-import java.util.Locale
+import com.practicum.playlistmaker.utils.formatTrackTime
 
 class TrackViewHolder(view: View, val imageCornersDp: Int) : ViewHolder(view) {
 
@@ -20,7 +19,7 @@ class TrackViewHolder(view: View, val imageCornersDp: Int) : ViewHolder(view) {
     fun bind(track: Track) {
         name.text = track.trackName
         artist.text = track.artistName
-        time.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
+        time.text = formatTrackTime(track.trackTimeMillis)
 
         Glide.with(itemView)
             .load(track.artworkUrl100)

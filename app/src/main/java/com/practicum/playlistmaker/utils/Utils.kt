@@ -1,8 +1,10 @@
 package com.practicum.playlistmaker.utils
 
 import android.content.Context
+import android.icu.text.SimpleDateFormat
 import android.util.TypedValue
 import androidx.appcompat.app.AppCompatDelegate
+import java.util.Locale
 
 fun dpToPx(dp: Float, context: Context): Int {
     return TypedValue.applyDimension(
@@ -21,3 +23,6 @@ fun switchTheme(checked: Boolean) {
         }
     )
 }
+
+fun formatTrackTime(millis: Int) : String =
+    SimpleDateFormat(TRACK_TIME_FORMAT, Locale.getDefault()).format(millis)
