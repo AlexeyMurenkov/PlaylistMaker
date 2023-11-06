@@ -12,4 +12,10 @@ data class Track(
     val artistName: String,
     val trackTimeMillis: Int,
     val artworkUrl100: String
-) : Serializable
+) : Serializable {
+    fun getArtworkUrl512() = artworkUrl100.replaceAfterLast('/', POSTFIX_512_COVER)
+
+    companion object {
+        private const val POSTFIX_512_COVER = "512x512bb.jpg"
+    }
+}

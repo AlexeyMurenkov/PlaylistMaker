@@ -1,22 +1,23 @@
 package com.practicum.playlistmaker.activity
 
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.activity.SearchActivity.Companion.KEY_PLAYER_TRACK
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker.track.Track
-import com.practicum.playlistmaker.utils.KEY_PLAYER_TRACK
 import com.practicum.playlistmaker.utils.dpToPx
 import com.practicum.playlistmaker.utils.formatTrackTime
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class PlayerActivity : AppCompatActivity() {
+
+    lateinit var binding: ActivityPlayerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,48 +29,42 @@ class PlayerActivity : AppCompatActivity() {
         }
         if (track == null) finish()
 
-        val binding = ActivityPlayerBinding.inflate(layoutInflater)
+        binding = ActivityPlayerBinding.inflate(layoutInflater)
 
         with(binding) {
             setContentView(root)
-
-            bind(this, track!!)
-
             playerBack.setOnClickListener {
                 finish()
             }
         }
-
+        bind(track!!)
     }
 
-    private fun bind(binding: ActivityPlayerBinding, track: Track) {
-        with(binding) {
-            with(track) {
-                loadTrackBigImage(playerCover, this)
+    private fun bind(track: Track) {
+        loadTrackBigImage(track)
 
-                playerTrackName.text = trackName
-                playerArtistName.text = artistName
-                playerTrackTime.text = formatTrackTime(trackTimeMillis)
-                playerReleaseYear.text = if (releaseDate.isNullOrBlank()) "" else LocalDate.parse(releaseDate, DateTimeFormatter.ISO_DATE_TIME).year.toString()
-                playerGenreName.text = primaryGenreName
-                playerCountryName.text = country
-                with(playerCollectionName) {
-                    if (collectionName.isNullOrBlank()) {
-                        visibility = View.GONE
-                    } else {
-                        text = collectionName
-                        visibility = View.VISIBLE
-                    }
-                }
+        with(binding) {
+            playerTrackName.text = track.trackName
+            playerArtistName.text = track.artistName
+            playerTrackTime.text = formatTrackTime(track.trackTimeMillis)
+            playerReleaseYear.text = if (track.releaseDate.isNullOrBlank()) "" else LocalDate.parse(
+                track.releaseDate,
+                DateTimeFormatter.ISO_DATE_TIME
+            ).year.toString()
+            playerGenreName.text = track.primaryGenreName
+            playerCountryName.text = track.country
+            if (track.collectionName.isNullOrBlank()) {
+                playerCollectionName.visibility = View.GONE
+            } else {
+                playerCollectionName.text = track.collectionName
+                playerCollectionName.visibility = View.VISIBLE
             }
         }
     }
 
-    private fun loadTrackBigImage(imageView: ImageView, track: Track) {
-        val artworkUrl512 = track.artworkUrl100.replaceAfterLast('/', POSTFIX_BIG_COVER)
-
+    private fun loadTrackBigImage(track: Track) {
         Glide.with(this)
-            .load(artworkUrl512)
+            .load(track.getArtworkUrl512())
             .placeholder(R.drawable.track_placeholder)
             .fitCenter()
             .transform(
@@ -77,10 +72,6 @@ class PlayerActivity : AppCompatActivity() {
                     dpToPx(resources.getDimension(R.dimen.dimen_2), this)
                 )
             )
-            .into(imageView)
-    }
-
-    companion object {
-        private const val POSTFIX_BIG_COVER = "512x512bb.jpg"
+            .into(binding.playerCover)
     }
 }

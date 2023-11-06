@@ -18,7 +18,6 @@ import com.practicum.playlistmaker.track.Track
 import com.practicum.playlistmaker.track.TrackAdapter
 import com.practicum.playlistmaker.track.TracksResponse
 import com.practicum.playlistmaker.track.history.HistoryTrackAdapter
-import com.practicum.playlistmaker.utils.KEY_PLAYER_TRACK
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -218,6 +217,8 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         private const val BASE_URL = "https://itunes.apple.com"
         private const val KEY_SEARCH_TEXT = "search_text"
+
         const val NAME_SEARCH_PREFERENCES = "settings_preferences"
+        const val KEY_PLAYER_TRACK = "track"
     }
 }
