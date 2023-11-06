@@ -1,6 +1,7 @@
 package com.practicum.playlistmaker.activity
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -13,6 +14,7 @@ import androidx.core.view.children
 import com.practicum.playlistmaker.track.history.SearchHistory
 import com.practicum.playlistmaker.api.ITunesSearchApi
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
+import com.practicum.playlistmaker.track.Track
 import com.practicum.playlistmaker.track.TrackAdapter
 import com.practicum.playlistmaker.track.TracksResponse
 import com.practicum.playlistmaker.track.history.HistoryTrackAdapter
@@ -63,13 +65,15 @@ class SearchActivity : AppCompatActivity() {
             searchHistory.adapter = HistoryTrackAdapter(
                 history.history,
                 {   track, position ->
-                    with(searchHistory) {
-                        adapter?.notifyItemRemoved(position)
-                        adapter?.notifyItemInserted(0)
-                        adapter?.notifyItemRangeChanged(position, adapter!!.itemCount)
-                        scrollToPosition(0)
+                    if (position != 0) {
+                        with(searchHistory) {
+                            adapter?.notifyItemRemoved(position)
+                            adapter?.notifyItemInserted(0)
+                            adapter?.notifyItemRangeChanged(position, adapter!!.itemCount)
+                            scrollToPosition(0)
+                        }
                     }
-                    history.add(track)
+                    play(track)
                 },
                 {
                     clearSearchHistory()
@@ -104,7 +108,7 @@ class SearchActivity : AppCompatActivity() {
                         val tracks = response.body()?.results!!
                         if (tracks.isNotEmpty()) {
                             binding.searchTracks.adapter = TrackAdapter(tracks) { track, _ ->
-                                history.add(
+                                play(
                                     track
                                 )
                             }
@@ -123,6 +127,14 @@ class SearchActivity : AppCompatActivity() {
 
             })
         }
+    }
+
+    private fun play(track: Track) {
+        history.add(track)
+        startActivity(
+            Intent(binding.root.context,  PlayerActivity::class.java)
+                .putExtra(KEY_PLAYER_TRACK, track)
+        )
     }
 
     private fun showSearchHistory() {
@@ -205,6 +217,8 @@ class SearchActivity : AppCompatActivity() {
     companion object {
         private const val BASE_URL = "https://itunes.apple.com"
         private const val KEY_SEARCH_TEXT = "search_text"
+
         const val NAME_SEARCH_PREFERENCES = "settings_preferences"
+        const val KEY_PLAYER_TRACK = "track"
     }
 }
