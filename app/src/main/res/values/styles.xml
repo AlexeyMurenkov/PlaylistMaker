@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="progress_bar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/dimen_44</item>
+        <item name="android:indeterminateTint">@color/yp_blue</item>
+        <item name="android:layout_marginTop">@dimen/dimen_140</item>
+    </style>
 
     <style name="activity_top_line">
         <item name="android:layout_width">match_parent</item>
