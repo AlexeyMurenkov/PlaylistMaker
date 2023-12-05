@@ -66,10 +66,11 @@
         <TextView
             android:id="@+id/player_progress"
             style="@style/player.text.progress"
-            android:text="0:00"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/player_play" />
+            app:layout_constraintTop_toBottomOf="@id/player_play"
+            tools:text="0:00" />
 
         <TextView
             style="@style/player.text.caption"
