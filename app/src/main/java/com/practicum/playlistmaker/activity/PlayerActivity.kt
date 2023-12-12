@@ -21,10 +21,10 @@ import java.time.format.DateTimeFormatter
 class PlayerActivity : AppCompatActivity() {
 
     private var mediaPlayer = MediaPlayer()
-    private var playerState = STATE_DEFAULT
+    private var playerState = PlayerState.DEFAULT
 
     private val handler = Handler(Looper.getMainLooper())
-    private val positionUpdater = Runnable { positionUpdate() }
+    private val positionUpdater = Runnable { updatePosition() }
 
 
     lateinit var binding: ActivityPlayerBinding
@@ -79,7 +79,7 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        if (playerState == STATE_PLAYING) {
+        if (playerState == PlayerState.PLAYING) {
             playPause()
         }
     }
@@ -97,27 +97,28 @@ class PlayerActivity : AppCompatActivity() {
             .into(binding.playerCover)
     }
 
-    private fun positionUpdate() {
+    private fun updatePosition() {
         if (mediaPlayer.currentPosition >= mediaPlayer.duration) {
             mediaPlayer.pause()
             mediaPlayer.seekTo(0)
-            playerState = STATE_PAUSED
+            playerState = PlayerState.PAUSED
             setButtonState()
         }
         binding.playerProgress.text = formatTrackTime(mediaPlayer.currentPosition)
-        if (playerState == STATE_PLAYING) {
-            handler.postDelayed(positionUpdater, 1000L)
+        if (playerState == PlayerState.PLAYING) {
+            handler.postDelayed(positionUpdater, REFRESH_POSITION_PERIOD)
         }
     }
+
     private fun setButtonState() {
-        if (playerState == STATE_PLAYING) {
+        if (playerState == PlayerState.PLAYING) {
             binding.playerPlay.setImageResource(R.drawable.button_pause)
-            positionUpdate()
+            updatePosition()
         } else {
             binding.playerPlay.setImageResource(R.drawable.button_play)
             handler.removeCallbacks(positionUpdater)
         }
-        binding.playerPlay.isEnabled = playerState != STATE_DEFAULT
+        binding.playerPlay.isEnabled = playerState != PlayerState.DEFAULT
     }
 
     private fun preparePlayer(track: Track) {
@@ -125,9 +126,9 @@ class PlayerActivity : AppCompatActivity() {
         with(mediaPlayer) {
             setDataSource(track.previewUrl)
             setOnPreparedListener {
-                playerState = STATE_PREPARED
+                playerState = PlayerState.PREPARED
                 setButtonState()
-                positionUpdate()
+                updatePosition()
             }
             prepareAsync()
         }
@@ -135,22 +136,19 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun playPause() {
         with(mediaPlayer) {
-            if (playerState == STATE_PLAYING) {
+            if (playerState == PlayerState.PLAYING) {
                 pause()
-                playerState = STATE_PAUSED
+                playerState = PlayerState.PAUSED
             } else {
                 start()
-                playerState = STATE_PLAYING
+                playerState = PlayerState.PLAYING
             }
         }
         setButtonState()
-        positionUpdate()
+        updatePosition()
     }
 
     companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
+        private const val REFRESH_POSITION_PERIOD = 1000L
     }
 }

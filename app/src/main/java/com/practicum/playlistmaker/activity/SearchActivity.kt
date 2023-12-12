@@ -101,6 +101,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun actionSearch() {
+        handler.removeCallbacks(searchRunnable)
         val searchText = binding.searchText.text.toString()
         hideChildren(binding.searchResults)
         if (searchText.isNotEmpty()) {
@@ -227,7 +228,6 @@ class SearchActivity : AppCompatActivity() {
             removeCallbacks(searchRunnable)
             postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
         }
-
     }
 
     companion object {

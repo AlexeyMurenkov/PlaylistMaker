@@ -32,16 +32,11 @@ open class TrackAdapter(
         return TrackViewHolder(view, imageCornersDp)
     }
 
-    private fun clickDebounce() : Boolean {
+    private fun clickDebounce(): Boolean {
         val currentClickAllowed = clickAllowed
-        if(currentClickAllowed) {
+        if (currentClickAllowed) {
             clickAllowed = false
-            handler.postDelayed(
-                {
-                    clickAllowed = true
-                },
-                CLICK_DEBOUNCE_DELAY
-            )
+            handler.postDelayed({ clickAllowed = true }, CLICK_DEBOUNCE_DELAY)
         }
         return currentClickAllowed
     }
