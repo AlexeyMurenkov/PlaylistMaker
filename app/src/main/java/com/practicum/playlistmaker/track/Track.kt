@@ -11,7 +11,8 @@ data class Track(
     val releaseDate: String?,
     val artistName: String,
     val trackTimeMillis: Int,
-    val artworkUrl100: String
+    val artworkUrl100: String,
+    val previewUrl: String?
 ) : Serializable {
     fun getArtworkUrl512() = artworkUrl100.replaceAfterLast('/', POSTFIX_512_COVER)
 

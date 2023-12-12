@@ -53,6 +53,11 @@
 
     </LinearLayout>
 
+    <ProgressBar
+        android:id="@+id/search_progress_bar"
+        style="@style/progress_bar"
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/search_results"
         android:layout_width="match_parent"

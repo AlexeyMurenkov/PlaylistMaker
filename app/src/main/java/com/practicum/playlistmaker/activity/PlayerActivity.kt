@@ -1,7 +1,10 @@
 package com.practicum.playlistmaker.activity
 
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
@@ -16,6 +19,13 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class PlayerActivity : AppCompatActivity() {
+
+    private var mediaPlayer = MediaPlayer()
+    private var playerState = PlayerState.DEFAULT
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val positionUpdater = Runnable { updatePosition() }
+
 
     lateinit var binding: ActivityPlayerBinding
 
@@ -33,11 +43,16 @@ class PlayerActivity : AppCompatActivity() {
 
         with(binding) {
             setContentView(root)
+            playerPlay.setOnClickListener {
+                playPause()
+            }
+
             playerBack.setOnClickListener {
                 finish()
             }
         }
         bind(track!!)
+        preparePlayer(track)
     }
 
     private fun bind(track: Track) {
@@ -62,6 +77,13 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        if (playerState == PlayerState.PLAYING) {
+            playPause()
+        }
+    }
+
     private fun loadTrackBigImage(track: Track) {
         Glide.with(this)
             .load(track.getArtworkUrl512())
@@ -73,5 +95,60 @@ class PlayerActivity : AppCompatActivity() {
                 )
             )
             .into(binding.playerCover)
+    }
+
+    private fun updatePosition() {
+        if (mediaPlayer.currentPosition >= mediaPlayer.duration) {
+            mediaPlayer.pause()
+            mediaPlayer.seekTo(0)
+            playerState = PlayerState.PAUSED
+            setButtonState()
+        }
+        binding.playerProgress.text = formatTrackTime(mediaPlayer.currentPosition)
+        if (playerState == PlayerState.PLAYING) {
+            handler.postDelayed(positionUpdater, REFRESH_POSITION_PERIOD)
+        }
+    }
+
+    private fun setButtonState() {
+        if (playerState == PlayerState.PLAYING) {
+            binding.playerPlay.setImageResource(R.drawable.button_pause)
+            updatePosition()
+        } else {
+            binding.playerPlay.setImageResource(R.drawable.button_play)
+            handler.removeCallbacks(positionUpdater)
+        }
+        binding.playerPlay.isEnabled = playerState != PlayerState.DEFAULT
+    }
+
+    private fun preparePlayer(track: Track) {
+        if (track.previewUrl.isNullOrBlank()) return
+        with(mediaPlayer) {
+            setDataSource(track.previewUrl)
+            setOnPreparedListener {
+                playerState = PlayerState.PREPARED
+                setButtonState()
+                updatePosition()
+            }
+            prepareAsync()
+        }
+    }
+
+    private fun playPause() {
+        with(mediaPlayer) {
+            if (playerState == PlayerState.PLAYING) {
+                pause()
+                playerState = PlayerState.PAUSED
+            } else {
+                start()
+                playerState = PlayerState.PLAYING
+            }
+        }
+        setButtonState()
+        updatePosition()
+    }
+
+    companion object {
+        private const val REFRESH_POSITION_PERIOD = 1000L
     }
 }

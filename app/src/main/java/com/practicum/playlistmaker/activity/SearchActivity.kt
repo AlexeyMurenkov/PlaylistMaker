@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -35,6 +37,9 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
     private lateinit var history: SearchHistory
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { actionSearch() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,9 +101,11 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun actionSearch() {
+        handler.removeCallbacks(searchRunnable)
         val searchText = binding.searchText.text.toString()
         hideChildren(binding.searchResults)
         if (searchText.isNotEmpty()) {
+            binding.searchProgressBar.visibility = View.VISIBLE
             searchService.search(searchText).enqueue(object : Callback<TracksResponse> {
                 override fun onResponse(
                     call: Call<TracksResponse>,
@@ -106,6 +113,7 @@ class SearchActivity : AppCompatActivity() {
                 ) {
                     if (response.code() == 200) {
                         val tracks = response.body()?.results!!
+                        binding.searchProgressBar.visibility = View.GONE
                         if (tracks.isNotEmpty()) {
                             binding.searchTracks.adapter = TrackAdapter(tracks) { track, _ ->
                                 play(
@@ -197,6 +205,7 @@ class SearchActivity : AppCompatActivity() {
                         } else {
                             searchClear.visibility = View.VISIBLE
                             hideSearchHistory()
+                            searchDebounce()
                         }
                     }
 
@@ -214,9 +223,18 @@ class SearchActivity : AppCompatActivity() {
         inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+    private fun searchDebounce() {
+        with(handler) {
+            removeCallbacks(searchRunnable)
+            postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+        }
+    }
+
     companion object {
         private const val BASE_URL = "https://itunes.apple.com"
         private const val KEY_SEARCH_TEXT = "search_text"
+
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
 
         const val NAME_SEARCH_PREFERENCES = "settings_preferences"
         const val KEY_PLAYER_TRACK = "track"
