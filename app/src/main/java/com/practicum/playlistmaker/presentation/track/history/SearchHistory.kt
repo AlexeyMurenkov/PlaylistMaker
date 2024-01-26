@@ -1,8 +1,8 @@
-package com.practicum.playlistmaker.track.history
+package com.practicum.playlistmaker.presentation.track.history
 
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import com.practicum.playlistmaker.track.Track
+import com.practicum.playlistmaker.domain.models.Track
 
 class SearchHistory(
     val sharedPreferences: SharedPreferences

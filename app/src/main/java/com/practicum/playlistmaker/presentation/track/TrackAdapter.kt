@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.track
+package com.practicum.playlistmaker.presentation.track
 
 import android.os.Handler
 import android.os.Looper
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.practicum.playlistmaker.R
+import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.utils.dpToPx
 import java.util.function.BiConsumer
 

@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.activity
+package com.practicum.playlistmaker.presentation
 
 import android.content.Context
 import android.content.Intent
@@ -13,16 +13,13 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.core.view.children
-import com.practicum.playlistmaker.track.history.SearchHistory
-import com.practicum.playlistmaker.api.ITunesSearchApi
+import com.practicum.playlistmaker.Creator
+import com.practicum.playlistmaker.presentation.track.history.SearchHistory
+import com.practicum.playlistmaker.data.network.ITunesSearchApi
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
-import com.practicum.playlistmaker.track.Track
-import com.practicum.playlistmaker.track.TrackAdapter
-import com.practicum.playlistmaker.track.TracksResponse
-import com.practicum.playlistmaker.track.history.HistoryTrackAdapter
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.presentation.track.TrackAdapter
+import com.practicum.playlistmaker.presentation.track.history.HistoryTrackAdapter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -34,6 +31,8 @@ class SearchActivity : AppCompatActivity() {
         .build()
 
     private val searchService = retrofit.create(ITunesSearchApi::class.java)
+
+    private val tracksInteractor = Creator.provideTracksInteractor()
 
     private lateinit var binding: ActivitySearchBinding
     private lateinit var history: SearchHistory
@@ -106,34 +105,22 @@ class SearchActivity : AppCompatActivity() {
         hideChildren(binding.searchResults)
         if (searchText.isNotEmpty()) {
             binding.searchProgressBar.visibility = View.VISIBLE
-            searchService.search(searchText).enqueue(object : Callback<TracksResponse> {
-                override fun onResponse(
-                    call: Call<TracksResponse>,
-                    response: Response<TracksResponse>
-                ) {
-                    if (response.code() == 200) {
-                        val tracks = response.body()?.results!!
-                        binding.searchProgressBar.visibility = View.GONE
-                        if (tracks.isNotEmpty()) {
-                            binding.searchTracks.adapter = TrackAdapter(tracks) { track, _ ->
-                                play(
-                                    track
-                                )
-                            }
-                            binding.searchTracks.visibility = View.VISIBLE
-                        } else {
-                            binding.searchNotFound.visibility = View.VISIBLE
-                        }
-                    } else {
+            tracksInteractor.searchTracks(searchText) {
+                runOnUiThread {
+                    binding.searchProgressBar.visibility = View.GONE
+                    if (it.err) {
                         binding.searchConnError.visibility = View.VISIBLE
+                    } else if (it.values.isNotEmpty()) {
+                        binding.searchTracks.adapter = TrackAdapter(it.values) { track, _ ->
+                            play(track)
+                        }
+                        binding.searchTracks.visibility = View.VISIBLE
+                    } else {
+                        binding.searchNotFound.visibility = View.VISIBLE
                     }
-                }
 
-                override fun onFailure(call: Call<TracksResponse>, t: Throwable) {
-                    binding.searchConnError.visibility = View.VISIBLE
                 }
-
-            })
+            }
         }
     }
 
