@@ -1,8 +1,6 @@
-package com.practicum.playlistmaker.track
+package com.practicum.playlistmaker.data.dto
 
-import java.io.Serializable
-
-data class Track(
+data class TrackDto(
     val trackId: Long,
     val collectionName: String?,
     val primaryGenreName: String,
@@ -13,10 +11,4 @@ data class Track(
     val trackTimeMillis: Int,
     val artworkUrl100: String,
     val previewUrl: String?
-) : Serializable {
-    fun getArtworkUrl512() = artworkUrl100.replaceAfterLast('/', POSTFIX_512_COVER)
-
-    companion object {
-        private const val POSTFIX_512_COVER = "512x512bb.jpg"
-    }
-}
+)

@@ -1,12 +1,12 @@
-package com.practicum.playlistmaker.track.history
+package com.practicum.playlistmaker.presentation.track.history
 
 import android.view.LayoutInflater
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.track.Track
-import com.practicum.playlistmaker.track.TrackAdapter
+import com.practicum.playlistmaker.domain.models.Track
+import com.practicum.playlistmaker.presentation.track.TrackAdapter
 import java.util.function.BiConsumer
 
 class HistoryTrackAdapter(

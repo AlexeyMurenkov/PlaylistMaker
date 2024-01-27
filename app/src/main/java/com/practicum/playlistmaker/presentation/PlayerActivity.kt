@@ -1,4 +1,4 @@
-package com.practicum.playlistmaker.activity
+package com.practicum.playlistmaker.presentation
 
 import android.media.MediaPlayer
 import android.os.Build
@@ -10,9 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
-import com.practicum.playlistmaker.activity.SearchActivity.Companion.KEY_PLAYER_TRACK
+import com.practicum.playlistmaker.presentation.SearchActivity.Companion.KEY_PLAYER_TRACK
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
-import com.practicum.playlistmaker.track.Track
+import com.practicum.playlistmaker.domain.models.Track
 import com.practicum.playlistmaker.utils.dpToPx
 import com.practicum.playlistmaker.utils.formatTrackTime
 import java.time.LocalDate
