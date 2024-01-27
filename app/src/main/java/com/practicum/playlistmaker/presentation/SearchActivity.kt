@@ -108,7 +108,7 @@ class SearchActivity : AppCompatActivity() {
             tracksInteractor.searchTracks(searchText) {
                 runOnUiThread {
                     binding.searchProgressBar.visibility = View.GONE
-                    if (it.err) {
+                    if (it.error) {
                         binding.searchConnError.visibility = View.VISIBLE
                     } else if (it.values.isNotEmpty()) {
                         binding.searchTracks.adapter = TrackAdapter(it.values) { track, _ ->
