@@ -68,7 +68,7 @@ class PlayerRepositoryImpl : PlayerRepository {
     }
 
     private fun setState(playerState: PlayerState) {
-        this.playerState = playerState;
+        this.playerState = playerState
         onChangeStateListener?.invoke(playerState)
     }
 

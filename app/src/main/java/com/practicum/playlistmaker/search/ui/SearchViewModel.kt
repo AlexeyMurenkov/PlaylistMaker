@@ -31,7 +31,7 @@ class SearchViewModel(application: Application, val searchInteractor: SearchInte
         searchInteractor.search(expression) {
             when (it) {
                 is Resource.Error -> searchScreenState.value = SearchScreenState.Error()
-                is Resource.Success -> searchScreenState.postValue(SearchScreenState.FoundTracks(it.data?: emptyList()))
+                is Resource.Success -> searchScreenState.postValue(SearchScreenState.FoundTracks(it.data))
             }
         }
     }
