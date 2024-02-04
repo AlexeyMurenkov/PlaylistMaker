@@ -16,9 +16,9 @@ fun dpToPx(dp: Float, context: Context): Int {
     ).toInt()
 }
 
-fun switchTheme(checked: Boolean) {
+fun switchTheme(isDarkTheme: Boolean) {
     AppCompatDelegate.setDefaultNightMode(
-        if (checked) {
+        if (isDarkTheme) {
             AppCompatDelegate.MODE_NIGHT_YES
         } else {
             AppCompatDelegate.MODE_NIGHT_NO
