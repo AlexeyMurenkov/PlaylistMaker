@@ -5,7 +5,7 @@ import com.practicum.playlistmaker.player.domain.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.models.PlayerState
 import com.practicum.playlistmaker.search.domain.models.Track
 
-class PlayerInteractorImpl(val playerRepository: PlayerRepository) : PlayerInteractor {
+class PlayerInteractorImpl(private val playerRepository: PlayerRepository) : PlayerInteractor {
     override val state: PlayerState
         get() = playerRepository.state
     override val duration: Int
@@ -34,5 +34,12 @@ class PlayerInteractorImpl(val playerRepository: PlayerRepository) : PlayerInter
 
     override fun pause() {
         playerRepository.pause()
+    }
+
+    override fun clear() {
+        with(playerRepository) {
+            onChangeStateListener = null
+            onPositionChangeListener = null
+        }
     }
 }

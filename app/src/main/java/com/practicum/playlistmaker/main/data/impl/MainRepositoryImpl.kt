@@ -7,7 +7,7 @@ import com.practicum.playlistmaker.media.ui.MediaActivity
 import com.practicum.playlistmaker.search.ui.SearchActivity
 import com.practicum.playlistmaker.settings.ui.SettingsActivity
 
-class MainRepositoryImpl(val context: Context) : MainRepository {
+class MainRepositoryImpl(private val context: Context) : MainRepository {
     override fun openSearchActivity() {
         context.startActivity(Intent(context, SearchActivity::class.java))
     }

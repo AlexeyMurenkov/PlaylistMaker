@@ -2,19 +2,18 @@ package com.practicum.playlistmaker.main.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
 import com.practicum.playlistmaker.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private val viewModel by viewModels<MainViewModel> {
+        MainViewModel.getViewModelFactory(this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
-
-        val viewModel = ViewModelProvider(
-            this,
-            MainViewModel.getViewModelFactory(this)
-        )[MainViewModel::class.java]
-
 
         with(binding) {
             setContentView(root)

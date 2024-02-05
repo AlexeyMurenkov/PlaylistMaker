@@ -1,20 +1,18 @@
 package com.practicum.playlistmaker.search.ui
 
-import android.app.Application
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.practicum.playlistmaker.search.domain.SearchInteractor
-import com.practicum.playlistmaker.search.domain.models.Resource
 import com.practicum.playlistmaker.search.domain.models.SearchScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.utils.Creator
 
-class SearchViewModel(application: Application, val searchInteractor: SearchInteractor) : AndroidViewModel(application) {
+class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewModel() {
 
     private val searchScreenState = MutableLiveData<SearchScreenState>()
     fun getPlayerScreenState(): LiveData<SearchScreenState> = searchScreenState
@@ -25,16 +23,24 @@ class SearchViewModel(application: Application, val searchInteractor: SearchInte
             searchScreenState.postValue(SearchScreenState.History(it))
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        with(searchInteractor) {
+            clear()
+            onChangeHistory = null
+        }
+    }
+
     fun search(expression: String) {
         if (expression.isBlank()) return
         searchScreenState.value = SearchScreenState.Process()
         searchInteractor.search(expression) {
-            when (it) {
-                is Resource.Error -> searchScreenState.value = SearchScreenState.Error()
-                is Resource.Success -> searchScreenState.postValue(SearchScreenState.FoundTracks(it.data))
-            }
+            it.onFailure { searchScreenState.postValue(SearchScreenState.Error()) }
+            it.onSuccess { searchScreenState.postValue(SearchScreenState.FoundTracks(it)) }
         }
     }
+
     fun play(track: Track) {
         searchInteractor.play(track)
     }
@@ -46,11 +52,8 @@ class SearchViewModel(application: Application, val searchInteractor: SearchInte
     companion object {
         fun getViewModelFactory(context: Context): ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val application =
-                    this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application
-
                 val searchInteractor = Creator.provideSearchInteractor(context)
-                SearchViewModel(application, searchInteractor)
+                SearchViewModel(searchInteractor)
             }
         }
     }

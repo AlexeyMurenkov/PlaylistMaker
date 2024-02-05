@@ -5,8 +5,8 @@ import com.practicum.playlistmaker.sharing.data.SharingRepository
 import com.practicum.playlistmaker.sharing.domain.SharingInteractor
 
 class SharingInteractorImpl(
-    val externalNavigator: ExternalNavigator,
-    val sharingRepository: SharingRepository
+    private val externalNavigator: ExternalNavigator,
+    private val sharingRepository: SharingRepository
 ) : SharingInteractor {
 
     override fun shareApp() {

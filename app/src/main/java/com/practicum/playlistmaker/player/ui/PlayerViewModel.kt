@@ -1,9 +1,8 @@
 package com.practicum.playlistmaker.player.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -13,12 +12,8 @@ import com.practicum.playlistmaker.player.domain.models.PlayerState
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.utils.Creator
 
-class PlayerViewModel(
-    application: Application,
-    val track: Track,
-    val playerInteractor: PlayerInteractor
-) : AndroidViewModel(application) {
-
+class PlayerViewModel(private val track: Track, private val playerInteractor: PlayerInteractor) :
+    ViewModel() {
 
     private val playerScreenState = MutableLiveData<PlayerScreenState>()
     fun getPlayerScreenState(): LiveData<PlayerScreenState> = playerScreenState
@@ -58,12 +53,19 @@ class PlayerViewModel(
     companion object {
         fun getViewModelFactory(track: Track): ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val application =
-                    this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as Application
                 val playerInteractor = Creator.providePlayerInteractor()
 
-                PlayerViewModel(application, track, playerInteractor)
+                PlayerViewModel(track, playerInteractor)
             }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        with(playerInteractor) {
+            clear()
+            onChangeStateListener = null
+            onChangePositionListener = null
         }
     }
 }

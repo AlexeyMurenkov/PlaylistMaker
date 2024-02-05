@@ -20,8 +20,8 @@ import java.time.format.DateTimeFormatter
 
 class PlayerActivity : AppCompatActivity() {
 
-    lateinit var viewModel: PlayerViewModel
-    lateinit var binding: ActivityPlayerBinding
+    private lateinit var viewModel: PlayerViewModel
+    private lateinit var binding: ActivityPlayerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

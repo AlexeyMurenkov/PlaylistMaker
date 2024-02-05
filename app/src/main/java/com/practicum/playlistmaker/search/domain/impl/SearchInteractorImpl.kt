@@ -7,8 +7,8 @@ import com.practicum.playlistmaker.search.domain.models.Track
 import java.util.concurrent.Executors
 
 class SearchInteractorImpl (
-    val trackRepository: TrackRepository,
-    val searchHistoryRepository: SearchHistoryRepository
+    private val trackRepository: TrackRepository,
+    private val searchHistoryRepository: SearchHistoryRepository
 ) : SearchInteractor {
 
     private val executor = Executors.newCachedThreadPool()
@@ -36,5 +36,9 @@ class SearchInteractorImpl (
 
     override fun clearHistory() {
         searchHistoryRepository.clear()
+    }
+
+    override fun clear() {
+        searchHistoryRepository.onChangeHistory = null
     }
 }

@@ -5,7 +5,7 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.sharing.data.SharingRepository
 import com.practicum.playlistmaker.sharing.domain.models.EmailData
 
-class SharingRepositoryImpl(val context: Context) : SharingRepository {
+class SharingRepositoryImpl(private val context: Context) : SharingRepository {
     override val shareAppLink: String
         get() = context.getString(R.string.share_app_link)
     override val agreementLink: String

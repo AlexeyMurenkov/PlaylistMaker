@@ -15,4 +15,6 @@ interface PlayerInteractor {
     fun prepare(track: Track)
     fun play()
     fun pause()
+
+    fun clear()
 }

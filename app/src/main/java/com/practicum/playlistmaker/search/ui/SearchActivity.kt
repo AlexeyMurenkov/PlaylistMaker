@@ -9,9 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.viewModels
 import androidx.core.view.children
 import androidx.core.widget.doOnTextChanged
-import androidx.lifecycle.ViewModelProvider
 import com.practicum.playlistmaker.databinding.ActivitySearchBinding
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.ui.track.TrackAdapter
@@ -20,8 +20,11 @@ import com.practicum.playlistmaker.search.domain.models.SearchScreenState
 
 class SearchActivity : AppCompatActivity() {
 
+    private val viewModel by viewModels<SearchViewModel> {
+        SearchViewModel.getViewModelFactory(this)
+    }
+
     private lateinit var binding: ActivitySearchBinding
-    private lateinit var viewModel: SearchViewModel
 
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { search() }
@@ -30,11 +33,6 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewModel = ViewModelProvider(
-            this,
-            SearchViewModel.getViewModelFactory(this)
-        )[SearchViewModel::class.java]
 
         binding = ActivitySearchBinding.inflate(layoutInflater)
 

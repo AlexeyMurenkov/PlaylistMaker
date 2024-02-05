@@ -10,7 +10,7 @@ import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.utils.formatTrackTime
 
-class TrackViewHolder(view: View, val imageCornersDp: Int) : ViewHolder(view) {
+class TrackViewHolder(view: View, private val imageCornersDp: Int) : ViewHolder(view) {
 
     private val name: TextView = view.findViewById(R.id.track_name)
     private val artist: TextView = view.findViewById(R.id.track_artist)
