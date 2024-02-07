@@ -2,20 +2,18 @@ package com.practicum.playlistmaker.player.data.impl
 
 import android.media.MediaPlayer
 import android.os.Handler
-import android.os.Looper
 import com.practicum.playlistmaker.player.data.PlayerRepository
 import com.practicum.playlistmaker.player.domain.models.PlayerState
 import com.practicum.playlistmaker.search.domain.models.Track
 
-class PlayerRepositoryImpl : PlayerRepository {
+class PlayerRepositoryImpl(private val player: MediaPlayer, private val handler: Handler) :
+    PlayerRepository {
 
-    private val player = MediaPlayer()
     private var playerState = PlayerState.DEFAULT
 
-    private val handler = Handler(Looper.getMainLooper())
     private val positionUpdater = Runnable { updatePosition() }
 
-    override var onChangeStateListener : ((PlayerState) -> Unit)? = null
+    override var onChangeStateListener: ((PlayerState) -> Unit)? = null
     override var onPositionChangeListener: ((Int) -> Unit)? = null
 
     override val state: PlayerState

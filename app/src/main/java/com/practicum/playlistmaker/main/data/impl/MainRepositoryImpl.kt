@@ -9,14 +9,17 @@ import com.practicum.playlistmaker.settings.ui.SettingsActivity
 
 class MainRepositoryImpl(private val context: Context) : MainRepository {
     override fun openSearchActivity() {
-        context.startActivity(Intent(context, SearchActivity::class.java))
+        context.startActivity(Intent(context, SearchActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     }
 
     override fun openMediaActivity() {
-        context.startActivity(Intent(context, MediaActivity::class.java))
+        context.startActivity(Intent(context, MediaActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     }
 
     override fun openSettingsActivity() {
-        context.startActivity(Intent(context, SettingsActivity::class.java))
+        context.startActivity(Intent(context, SettingsActivity::class.java)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
     }
 }
