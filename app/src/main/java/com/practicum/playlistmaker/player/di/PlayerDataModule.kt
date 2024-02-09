@@ -11,7 +11,7 @@ import org.koin.dsl.module
 
 val playerDataModule = module {
     single<PlayerRepository> {
-        PlayerRepositoryImpl(get(), get())
+        PlayerRepositoryImpl(player = get(), handler = get())
     }
 
     single {

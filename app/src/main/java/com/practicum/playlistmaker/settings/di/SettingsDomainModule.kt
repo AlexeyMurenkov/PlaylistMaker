@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 val settingsDomainModule = module {
     single<SettingsInteractor> {
-        SettingsInteractorImpl(get())
+        SettingsInteractorImpl(settingsRepository = get())
     }
 }

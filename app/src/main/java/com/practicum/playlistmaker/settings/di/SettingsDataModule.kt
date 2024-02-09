@@ -17,7 +17,7 @@ val settingsDataModule = module {
     }
 
     single<SettingsRepository> {
-        SettingsRepositoryImpl(get(named("ApplicationSettings")))
+        SettingsRepositoryImpl(repository = get(named("ApplicationSettings")))
     }
 }
 

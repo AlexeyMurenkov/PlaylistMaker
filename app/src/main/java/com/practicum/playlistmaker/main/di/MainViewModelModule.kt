@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 val mainViewModelModule = module {
     viewModel {
-        MainViewModel(get(), get())
+        MainViewModel(mainInteractor = get(), settingsInteractor = get())
     }
 }

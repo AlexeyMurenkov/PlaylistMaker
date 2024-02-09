@@ -29,15 +29,15 @@ val searchDataModule = module {
     }
 
     single<NetworkClient> {
-        ITunesNetworkClient(get())
+        ITunesNetworkClient(iTunesService = get())
     }
 
     single<TrackRepository> {
-        TrackRepositoryImpl(get(), get())
+        TrackRepositoryImpl(context = get(), networkClient = get())
     }
 
     single<SearchHistoryRepository> {
-        SearchHistoryRepositoryImpl(SEARCH_HISTORY_CAPACITY, get(named("TrackList")))
+        SearchHistoryRepositoryImpl(SEARCH_HISTORY_CAPACITY, repository = get(named("TrackList")))
     }
 }
 

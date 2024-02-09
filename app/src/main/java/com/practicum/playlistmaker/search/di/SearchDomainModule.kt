@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 val searchDomainModule = module {
     single<SearchInteractor> {
-        SearchInteractorImpl(get(), get())
+        SearchInteractorImpl(trackRepository = get(), searchHistoryRepository = get())
     }
 }

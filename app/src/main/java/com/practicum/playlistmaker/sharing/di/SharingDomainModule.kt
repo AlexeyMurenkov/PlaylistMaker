@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 val sharingDomainModule = module {
     single<SharingInteractor> {
-        SharingInteractorImpl(get(), get())
+        SharingInteractorImpl(externalNavigator = get(), sharingRepository = get())
     }
 }

@@ -6,6 +6,6 @@ import org.koin.dsl.module
 
 val playerDomainModule = module {
     single<PlayerInteractor> {
-        PlayerInteractorImpl(get())
+        PlayerInteractorImpl(playerRepository = get())
     }
 }
