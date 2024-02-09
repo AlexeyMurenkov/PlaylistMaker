@@ -1,7 +1,7 @@
 package com.practicum.playlistmaker.search.di
 
-import com.practicum.playlistmaker.search.data.SearchHistoryRepository
-import com.practicum.playlistmaker.search.data.TrackRepository
+import com.practicum.playlistmaker.search.domain.SearchHistoryRepository
+import com.practicum.playlistmaker.search.domain.TrackRepository
 import com.practicum.playlistmaker.search.data.impl.SearchHistoryRepositoryImpl
 import com.practicum.playlistmaker.search.data.impl.TrackRepositoryImpl
 import com.practicum.playlistmaker.search.data.network.ITunesSearchApi

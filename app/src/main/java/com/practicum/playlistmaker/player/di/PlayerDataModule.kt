@@ -4,7 +4,7 @@ import android.media.MediaPlayer
 import android.os.Handler
 import android.os.Looper
 
-import com.practicum.playlistmaker.player.data.PlayerRepository
+import com.practicum.playlistmaker.player.domain.PlayerRepository
 import com.practicum.playlistmaker.player.data.impl.PlayerRepositoryImpl
 import org.koin.dsl.module
 

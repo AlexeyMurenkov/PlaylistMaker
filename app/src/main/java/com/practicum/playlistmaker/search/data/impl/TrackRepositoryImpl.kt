@@ -3,7 +3,7 @@ package com.practicum.playlistmaker.search.data.impl
 import android.content.Context
 import android.content.Intent
 import com.practicum.playlistmaker.player.ui.PlayerActivity
-import com.practicum.playlistmaker.search.data.TrackRepository
+import com.practicum.playlistmaker.search.domain.TrackRepository
 import com.practicum.playlistmaker.search.data.dto.TracksRequest
 import com.practicum.playlistmaker.search.data.dto.TracksResponse
 import com.practicum.playlistmaker.search.data.network.NetworkClient
