@@ -1,15 +1,12 @@
 package com.practicum.playlistmaker.main.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.practicum.playlistmaker.databinding.ActivityMainBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
-
-    private val viewModel by viewModels<MainViewModel> {
-        MainViewModel.getViewModelFactory(this)
-    }
+    private val viewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

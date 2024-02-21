@@ -1,15 +1,15 @@
 package com.practicum.playlistmaker.search.data.impl
 
-import com.practicum.playlistmaker.search.data.SearchHistoryRepository
+import com.practicum.playlistmaker.search.domain.SearchHistoryRepository
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.domain.models.TracksList
 import com.practicum.playlistmaker.utils.data.SharedPreferencesRepository
 
+
 class SearchHistoryRepositoryImpl(
     private val capacity: Int,
     private val repository: SharedPreferencesRepository<TracksList>
-) :
-    SearchHistoryRepository {
+) : SearchHistoryRepository {
 
     private val mutableHistory = mutableListOf<Track>()
 

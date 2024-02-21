@@ -1,16 +1,11 @@
 package com.practicum.playlistmaker.search.ui
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.practicum.playlistmaker.search.domain.SearchInteractor
 import com.practicum.playlistmaker.search.domain.models.SearchScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
-import com.practicum.playlistmaker.utils.Creator
 
 class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewModel() {
 
@@ -47,14 +42,5 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
 
     fun clearHistory() {
         searchInteractor.clearHistory()
-    }
-
-    companion object {
-        fun getViewModelFactory(context: Context): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val searchInteractor = Creator.provideSearchInteractor(context)
-                SearchViewModel(searchInteractor)
-            }
-        }
     }
 }

@@ -5,22 +5,22 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
 import com.practicum.playlistmaker.player.domain.models.PlayerScreenState
-import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.player.domain.models.PlayerState
+import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.utils.dpToPx
 import com.practicum.playlistmaker.utils.formatTrackTime
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class PlayerActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: PlayerViewModel
+    private val viewModel: PlayerViewModel by viewModel()
     private lateinit var binding: ActivityPlayerBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,20 +35,15 @@ class PlayerActivity : AppCompatActivity() {
 
         binding = ActivityPlayerBinding.inflate(layoutInflater)
 
-        viewModel = ViewModelProvider(
-            this,
-            PlayerViewModel.getViewModelFactory(track!!)
-        )[PlayerViewModel::class.java]
-
         with(binding) {
             setContentView(root)
             playerPlay.isEnabled = false
             playerPlay.setOnClickListener { viewModel.playPause() }
             playerBack.setOnClickListener { finish() }
         }
-        bind(track)
+        bind(track!!)
 
-        viewModel.preparePlayer()
+        viewModel.preparePlayer(track)
         viewModel.getPlayerScreenState().observe(this) {
             when (it) {
                 is PlayerScreenState.State -> setButtonState(it.state)

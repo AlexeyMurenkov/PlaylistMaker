@@ -1,17 +1,13 @@
 package com.practicum.playlistmaker.utils.data
 
-import android.content.Context
+import android.content.SharedPreferences
 import com.google.gson.Gson
 
 class SharedPreferencesRepository<T>(
-    context: Context,
     private val classOfT: Class<T>,
-    nameSharedPreferences: String,
+    val sharedPreferences: SharedPreferences,
     private val key: String
 ) {
-
-    private val sharedPreferences =
-        context.getSharedPreferences(nameSharedPreferences, Context.MODE_PRIVATE)
     var storage: T
         get() {
             val value = sharedPreferences.getString(key, "{}")

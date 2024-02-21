@@ -3,7 +3,7 @@ package com.practicum.playlistmaker.search.data.impl
 import android.content.Context
 import android.content.Intent
 import com.practicum.playlistmaker.player.ui.PlayerActivity
-import com.practicum.playlistmaker.search.data.TrackRepository
+import com.practicum.playlistmaker.search.domain.TrackRepository
 import com.practicum.playlistmaker.search.data.dto.TracksRequest
 import com.practicum.playlistmaker.search.data.dto.TracksResponse
 import com.practicum.playlistmaker.search.data.network.NetworkClient
@@ -39,6 +39,7 @@ class TrackRepositoryImpl(private val context: Context, private val networkClien
     override fun play(track: Track) {
         context.startActivity(
             Intent(context, PlayerActivity::class.java)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 .putExtra(Intent.ACTION_ATTACH_DATA, track)
         )
     }
