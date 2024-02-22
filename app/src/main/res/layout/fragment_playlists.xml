@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/media">
+
+    <TextView
+        android:id="@+id/media_empty_playlists"
+        style="@style/media.child.imaged_text"
+        android:text="@string/media_empty_playlists"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:drawableTopCompat="@drawable/search_not_found" />
+
+    <Button
+        android:id="@+id/media_new_playlist"
+        style="@style/search_action_button"
+        android:text="@string/refresh"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
