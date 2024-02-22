@@ -9,11 +9,13 @@ import com.practicum.playlistmaker.media.ui.fragments.PlaylistsFragment
 class MediaViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
 
-    override fun getItemCount() = MEDIA_TABS.size
-    override fun createFragment(position: Int) = MEDIA_TABS[position]
+    override fun getItemCount() = TABS_COUNT
+    override fun createFragment(position: Int) = when (position) {
+        0 -> FavoritesFragment.newInstance()
+        else -> PlaylistsFragment.newInstance()
+    }
 
     companion object {
-        private val MEDIA_TABS =
-            listOf(FavoritesFragment(), PlaylistsFragment())
+        private const val TABS_COUNT = 2
     }
 }

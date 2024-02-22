@@ -194,6 +194,7 @@
     <style name="media">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
+        <item name="android:background">?attr/colorPrimary</item>
     </style>
 
     <style name="media.child" parent="media">

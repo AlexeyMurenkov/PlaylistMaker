@@ -12,4 +12,8 @@ class FavoritesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ) = FragmentFavoritesBinding.inflate(inflater, container, false).root
+
+    companion object {
+        fun newInstance() = FavoritesFragment().apply {  }
+    }
 }
