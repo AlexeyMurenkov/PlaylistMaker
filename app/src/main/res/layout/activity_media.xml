@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/media"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/media_back"
+        style="@style/activity_top_line"
+        android:text="@string/media"
+        app:drawableLeftCompat="@drawable/arrow_back" />
+    
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabs"
+        style="@style/media.child.tab_selector" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        style="@style/media" />
+</LinearLayout>

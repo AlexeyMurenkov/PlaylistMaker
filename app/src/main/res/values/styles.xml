@@ -191,4 +191,28 @@
         <item name="android:textColor">@color/yp_text_gray</item>
     </style>
 
+    <style name="media">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">?attr/colorPrimary</item>
+    </style>
+
+    <style name="media.child" parent="media">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="media.child.imaged_text" parent="media.child">
+        <item name="android:textSize">@dimen/large_font_size</item>
+        <item name="android:layout_marginTop">@dimen/dimen_108</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="media.child.tab_selector" parent="media.child">
+        <item name="android:textSize">@dimen/medium_font_size</item>
+        <item name="tabBackground">@drawable/media_tab_selector</item>
+        <item name="tabTextColor">?attr/colorOnPrimary</item>
+        <item name="tabIndicatorColor">?attr/colorOnPrimary</item>
+    </style>
 </resources>

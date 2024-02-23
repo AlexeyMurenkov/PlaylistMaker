@@ -6,6 +6,7 @@
     <dimen name="dimen_16">16dp</dimen>
     <dimen name="dimen_24">24dp</dimen>
     <dimen name="dimen_44">44dp</dimen>
+    <dimen name="dimen_108">108dp</dimen>
     <dimen name="dimen_140">140dp</dimen>
 
     <dimen name="small_font_size">12sp</dimen>
