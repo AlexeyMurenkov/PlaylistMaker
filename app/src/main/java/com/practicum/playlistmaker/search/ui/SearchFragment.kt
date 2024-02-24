@@ -4,42 +4,45 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import androidx.core.widget.doOnTextChanged
-import com.practicum.playlistmaker.databinding.ActivitySearchBinding
+import androidx.fragment.app.Fragment
+import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.search.domain.models.SearchScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.ui.track.TrackAdapter
 import com.practicum.playlistmaker.search.ui.track.history.HistoryTrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
-
+class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
 
-    private lateinit var binding: ActivitySearchBinding
+    private var _binding: FragmentSearchBinding? = null
+    private val binding get() = _binding!!
 
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { search() }
 
     private var history = mutableListOf<Track>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        binding = ActivitySearchBinding.inflate(layoutInflater)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
-            setContentView(root)
-
-            searchBack.setOnClickListener {
-                finish()
-            }
 
             initSearchEditText()
 
@@ -75,7 +78,7 @@ class SearchActivity : AppCompatActivity() {
             hideChildren(searchResults)
         }
 
-        viewModel.getPlayerScreenState().observe(this) {
+        viewModel.getPlayerScreenState().observe(viewLifecycleOwner) {
             when (it) {
                 is SearchScreenState.Process -> showProgressBar()
                 is SearchScreenState.Error -> showError()
@@ -84,6 +87,12 @@ class SearchActivity : AppCompatActivity() {
                 else -> {}
             }
         }
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
 
     private fun search() {
@@ -172,14 +181,16 @@ class SearchActivity : AppCompatActivity() {
 
     private fun hideKeyboard(view: View) {
         val inputMethodManager =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     private fun searchDebounce() {
         with(handler) {
             removeCallbacks(searchRunnable)
-            postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+            postDelayed(searchRunnable,
+                SEARCH_DEBOUNCE_DELAY
+            )
         }
     }
 

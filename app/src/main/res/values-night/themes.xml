@@ -1,5 +1,4 @@
 <resources>
-
     <style name="Base.Theme.PlaylistMaker" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/yp_black</item>
         <item name="colorOnPrimary">@color/yp_white</item>
@@ -12,9 +11,4 @@
         <item name="colorOnSurface">@color/yp_black</item>
         <item name="colorSurfaceVariant">@color/yp_black</item>
     </style>
-
-    <style name="Base.Theme.PlaylistMaker.Main" parent="Base.Theme.PlaylistMaker">
-        <item name="colorPrimary">@color/yp_black</item>
-    </style>
-
 </resources>

@@ -1,8 +1,6 @@
 package com.practicum.playlistmaker
 
 import android.app.Application
-import com.practicum.playlistmaker.main.di.mainDataModule
-import com.practicum.playlistmaker.main.di.mainViewModelModule
 import com.practicum.playlistmaker.media.di.mediaViewModelModule
 import com.practicum.playlistmaker.player.di.playerDataModule
 import com.practicum.playlistmaker.player.di.playerDomainModule
@@ -11,9 +9,7 @@ import com.practicum.playlistmaker.search.di.searchDataModule
 import com.practicum.playlistmaker.search.di.searchViewModelModule
 import com.practicum.playlistmaker.settings.di.settingsDataModule
 import com.practicum.playlistmaker.settings.di.settingsViewModelModule
-import com.practicum.playlistmaker.settings.domain.SettingsInteractor
 import com.practicum.playlistmaker.settings.domain.SettingsRepository
-import com.practicum.playlistmaker.settings.domain.impl.SettingsInteractorImpl
 import com.practicum.playlistmaker.utils.di.utilsDataModule
 import com.practicum.playlistmaker.utils.switchTheme
 import org.koin.android.ext.android.getKoin
@@ -28,7 +24,6 @@ class PlaylistMakerApplication : Application() {
             modules(
                 searchViewModelModule, searchDataModule,
                 settingsViewModelModule, settingsDataModule,
-                mainViewModelModule, mainDataModule,
                 playerViewModelModule, playerDomainModule, playerDataModule,
                 mediaViewModelModule,
                 utilsDataModule

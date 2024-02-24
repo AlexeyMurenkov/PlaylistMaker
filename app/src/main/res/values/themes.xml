@@ -12,10 +12,4 @@
         <item name="colorOnSurface">@color/yp_black</item>
         <item name="colorSurfaceVariant">@color/yp_text_gray</item>
     </style>
-
-    <style name="Base.Theme.PlaylistMaker.Main" parent="Base.Theme.PlaylistMaker">
-        <item name="colorPrimary">@color/yp_blue</item>
-        <item name="colorOnPrimary">@color/yp_white</item>
-        <item name="android:statusBarColor">?attr/colorPrimary</item>
-    </style>
 </resources>
