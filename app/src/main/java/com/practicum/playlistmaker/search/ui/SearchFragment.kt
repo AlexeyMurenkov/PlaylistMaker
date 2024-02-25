@@ -22,9 +22,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
 
-    private var _binding: FragmentSearchBinding? = null
-    private val binding get() = _binding!!
-
+    private var binding: FragmentSearchBinding? = null
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { search() }
 
@@ -34,15 +32,16 @@ class SearchFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSearchBinding.inflate(inflater, container, false)
-        return binding.root
+    ): View? {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding) {
+        if (binding == null) return
+        with(binding!!) {
 
             initSearchEditText()
 
@@ -92,25 +91,25 @@ class SearchFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        _binding = null
+        binding = null
     }
 
     private fun search() {
         handler.removeCallbacks(searchRunnable)
-        hideChildren(binding.searchResults)
-        val searchText = binding.searchText.text.toString()
+        binding?.let { hideChildren(it.searchResults) }
+        val searchText = binding?.searchText?.text.toString()
         viewModel.search(searchText)
     }
 
     private fun showTracks(tracks: List<Track>) {
         hideProgressBar()
         if (tracks.isEmpty()) {
-            binding.searchNotFound.visibility = View.VISIBLE
+            binding?.searchNotFound?.visibility = View.VISIBLE
         } else {
-            binding.searchTracks.adapter = TrackAdapter(tracks) { track, _ ->
+            binding?.searchTracks?.adapter = TrackAdapter(tracks) { track, _ ->
                 viewModel.play(track)
             }
-            binding.searchTracks.visibility = View.VISIBLE
+            binding?.searchTracks?.visibility = View.VISIBLE
         }
     }
 
@@ -124,26 +123,24 @@ class SearchFragment : Fragment() {
 
     private fun showError() {
         hideProgressBar()
-        binding.searchConnError.visibility = View.VISIBLE
+        binding?.searchConnError?.visibility = View.VISIBLE
     }
 
     private fun showProgressBar() {
-        binding.searchProgressBar.visibility = View.VISIBLE
+        binding?.searchProgressBar?.visibility = View.VISIBLE
     }
 
     private fun hideProgressBar() {
-        binding.searchProgressBar.visibility = View.GONE
+        binding?.searchProgressBar?.visibility = View.GONE
     }
 
     private fun showSearchHistory() {
-        with(binding) {
-            searchHistory.adapter?.notifyDataSetChanged()
-            searchHistoryGroup.visibility = if (history.isEmpty()) View.GONE else View.VISIBLE
-        }
+        binding?.searchHistory?.adapter?.notifyDataSetChanged()
+        binding?.searchHistoryGroup?.visibility = if (history.isEmpty()) View.GONE else View.VISIBLE
     }
 
     private fun hideSearchHistory() {
-        binding.searchHistoryGroup.visibility = View.GONE
+        binding?.searchHistoryGroup?.visibility = View.GONE
     }
 
     private fun hideChildren(parent: ViewGroup) {
@@ -151,10 +148,11 @@ class SearchFragment : Fragment() {
     }
 
     private fun initSearchEditText() {
-        with(binding) {
+        if (binding == null) return
+        with(binding!!) {
             searchClear.setOnClickListener {
                 searchText.setText("")
-                hideChildren(binding.searchResults)
+                hideChildren(binding!!.searchResults)
                 hideKeyboard(searchText)
             }
 

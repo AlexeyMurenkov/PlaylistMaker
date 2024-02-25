@@ -11,24 +11,23 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class PlaylistsFragment : Fragment() {
     private val viewModel: PlaylistsViewModel by viewModel()
 
-    private var _binding: FragmentPlaylistsBinding? = null
-    private val binding get() = _binding!!
+    private var binding: FragmentPlaylistsBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ) : View {
-        _binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
-        return binding.root
+    ) : View? {
+        binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.mediaNewPlaylist.setOnClickListener { viewModel.newPlaylist() }
+        binding?.mediaNewPlaylist?.setOnClickListener { viewModel.newPlaylist() }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        binding = null
     }
 
     companion object {

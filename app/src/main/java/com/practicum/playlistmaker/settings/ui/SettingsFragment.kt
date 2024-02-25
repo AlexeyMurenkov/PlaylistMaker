@@ -11,22 +11,21 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SettingsFragment : Fragment() {
     private val viewModel: SettingsViewModel by viewModel()
 
-    private var _binding: FragmentSettingsBinding? = null
-    private val binding get() = _binding!!
+    private var binding: FragmentSettingsBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentSettingsBinding.inflate(inflater, container, false)
-        return binding.root
+    ): View? {
+        binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        return binding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        with(binding) {
+        if (binding == null) return
+        with(binding!!) {
             settingsShareApp.setOnClickListener {
                 viewModel.shareApp()
             }
@@ -42,13 +41,13 @@ class SettingsFragment : Fragment() {
         }
 
         viewModel.getStateIsDarkTheme().observe(viewLifecycleOwner) {
-            binding.settingsDarkTheme.isChecked = it
+            binding!!.settingsDarkTheme.isChecked = it
         }
 
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        _binding = null
+        binding = null
     }
 }
