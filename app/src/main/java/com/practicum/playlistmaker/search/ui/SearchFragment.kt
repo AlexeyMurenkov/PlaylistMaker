@@ -4,42 +4,44 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import androidx.core.widget.doOnTextChanged
-import com.practicum.playlistmaker.databinding.ActivitySearchBinding
+import androidx.fragment.app.Fragment
+import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.search.domain.models.SearchScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.ui.track.TrackAdapter
 import com.practicum.playlistmaker.search.ui.track.history.HistoryTrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
-
+class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
 
-    private lateinit var binding: ActivitySearchBinding
-
+    private var binding: FragmentSearchBinding? = null
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { search() }
 
     private var history = mutableListOf<Track>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        return binding?.root
+    }
 
-        binding = ActivitySearchBinding.inflate(layoutInflater)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        with(binding) {
-            setContentView(root)
-
-            searchBack.setOnClickListener {
-                finish()
-            }
+        if (binding == null) return
+        with(binding!!) {
 
             initSearchEditText()
 
@@ -75,7 +77,7 @@ class SearchActivity : AppCompatActivity() {
             hideChildren(searchResults)
         }
 
-        viewModel.getPlayerScreenState().observe(this) {
+        viewModel.getPlayerScreenState().observe(viewLifecycleOwner) {
             when (it) {
                 is SearchScreenState.Process -> showProgressBar()
                 is SearchScreenState.Error -> showError()
@@ -84,24 +86,30 @@ class SearchActivity : AppCompatActivity() {
                 else -> {}
             }
         }
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
     }
 
     private fun search() {
         handler.removeCallbacks(searchRunnable)
-        hideChildren(binding.searchResults)
-        val searchText = binding.searchText.text.toString()
+        binding?.let { hideChildren(it.searchResults) }
+        val searchText = binding?.searchText?.text.toString()
         viewModel.search(searchText)
     }
 
     private fun showTracks(tracks: List<Track>) {
         hideProgressBar()
         if (tracks.isEmpty()) {
-            binding.searchNotFound.visibility = View.VISIBLE
+            binding?.searchNotFound?.visibility = View.VISIBLE
         } else {
-            binding.searchTracks.adapter = TrackAdapter(tracks) { track, _ ->
+            binding?.searchTracks?.adapter = TrackAdapter(tracks) { track, _ ->
                 viewModel.play(track)
             }
-            binding.searchTracks.visibility = View.VISIBLE
+            binding?.searchTracks?.visibility = View.VISIBLE
         }
     }
 
@@ -115,26 +123,24 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showError() {
         hideProgressBar()
-        binding.searchConnError.visibility = View.VISIBLE
+        binding?.searchConnError?.visibility = View.VISIBLE
     }
 
     private fun showProgressBar() {
-        binding.searchProgressBar.visibility = View.VISIBLE
+        binding?.searchProgressBar?.visibility = View.VISIBLE
     }
 
     private fun hideProgressBar() {
-        binding.searchProgressBar.visibility = View.GONE
+        binding?.searchProgressBar?.visibility = View.GONE
     }
 
     private fun showSearchHistory() {
-        with(binding) {
-            searchHistory.adapter?.notifyDataSetChanged()
-            searchHistoryGroup.visibility = if (history.isEmpty()) View.GONE else View.VISIBLE
-        }
+        binding?.searchHistory?.adapter?.notifyDataSetChanged()
+        binding?.searchHistoryGroup?.visibility = if (history.isEmpty()) View.GONE else View.VISIBLE
     }
 
     private fun hideSearchHistory() {
-        binding.searchHistoryGroup.visibility = View.GONE
+        binding?.searchHistoryGroup?.visibility = View.GONE
     }
 
     private fun hideChildren(parent: ViewGroup) {
@@ -142,10 +148,11 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun initSearchEditText() {
-        with(binding) {
+        if (binding == null) return
+        with(binding!!) {
             searchClear.setOnClickListener {
                 searchText.setText("")
-                hideChildren(binding.searchResults)
+                hideChildren(binding!!.searchResults)
                 hideKeyboard(searchText)
             }
 
@@ -172,14 +179,16 @@ class SearchActivity : AppCompatActivity() {
 
     private fun hideKeyboard(view: View) {
         val inputMethodManager =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     private fun searchDebounce() {
         with(handler) {
             removeCallbacks(searchRunnable)
-            postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
+            postDelayed(searchRunnable,
+                SEARCH_DEBOUNCE_DELAY
+            )
         }
     }
 

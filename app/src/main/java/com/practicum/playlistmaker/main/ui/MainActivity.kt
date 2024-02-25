@@ -2,22 +2,24 @@ package com.practicum.playlistmaker.main.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityMainBinding
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
-    private val viewModel: MainViewModel by viewModel()
-
+    private var binding : ActivityMainBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
 
-        with(binding) {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.container_view) as NavHostFragment
+        val navController = navHostFragment.navController
+
+        with (binding!!) {
             setContentView(root)
-
-            mainSearch.setOnClickListener { viewModel.openSearchActivity() }
-            mainMedia.setOnClickListener { viewModel.openMediaActivity() }
-            mainSettings.setOnClickListener { viewModel.openSettingsActivity() }
+            navView.setupWithNavController(navController)
         }
+
     }
 }

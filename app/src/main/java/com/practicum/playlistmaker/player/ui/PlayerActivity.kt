@@ -39,7 +39,7 @@ class PlayerActivity : AppCompatActivity() {
             setContentView(root)
             playerPlay.isEnabled = false
             playerPlay.setOnClickListener { viewModel.playPause() }
-            playerBack.setOnClickListener { finish() }
+            playerBack.setNavigationOnClickListener { finish() }
         }
         bind(track!!)
 
