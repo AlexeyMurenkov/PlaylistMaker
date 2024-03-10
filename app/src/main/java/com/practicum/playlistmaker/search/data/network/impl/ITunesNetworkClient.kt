@@ -4,13 +4,17 @@ import com.practicum.playlistmaker.search.data.dto.Response
 import com.practicum.playlistmaker.search.data.dto.TracksRequest
 import com.practicum.playlistmaker.search.data.network.ITunesSearchApi
 import com.practicum.playlistmaker.search.data.network.NetworkClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ITunesNetworkClient(private val iTunesService: ITunesSearchApi) : NetworkClient {
-    override fun doRequest(dto: Any): Response {
+
+    override suspend fun doRequest(dto: Any): Response {
         return if (dto is TracksRequest) {
-            val response = iTunesService.search(dto.expression).execute()
-            val body = response.body() ?: Response()
-            body.apply { resultCode = response.code() }
+            withContext(Dispatchers.IO) {
+                val response = iTunesService.search(dto.expression)
+                response.apply { resultCode = HTTP_OK }
+            }
         } else {
             Response().apply { resultCode = HTTP_BAD_REQUEST }
         }
