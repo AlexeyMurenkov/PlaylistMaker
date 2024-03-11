@@ -1,7 +1,5 @@
 package com.practicum.playlistmaker.search.ui.track
 
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
@@ -16,10 +14,6 @@ open class TrackAdapter(
     private val onTrackClick: BiConsumer<Track, Int>
 ) : Adapter<ViewHolder>() {
 
-
-    private var clickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val imageCornersPx = parent
             .resources
@@ -30,16 +24,8 @@ open class TrackAdapter(
         val view = LayoutInflater
             .from(parent.context)
             .inflate(R.layout.card_track, parent, false)
-        return TrackViewHolder(view, imageCornersDp)
-    }
 
-    private fun clickDebounce(): Boolean {
-        val currentClickAllowed = clickAllowed
-        if (currentClickAllowed) {
-            clickAllowed = false
-            handler.postDelayed({ clickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return currentClickAllowed
+        return TrackViewHolder(view, imageCornersDp)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -49,7 +35,7 @@ open class TrackAdapter(
             with(holder) {
                 bind(track)
                 itemView.setOnClickListener {
-                    if (clickDebounce()) onTrackClick.accept(track, position)
+                    onTrackClick.accept(track, position)
                 }
             }
         }
@@ -57,9 +43,5 @@ open class TrackAdapter(
 
     override fun getItemCount(): Int {
         return tracks.size
-    }
-
-    companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

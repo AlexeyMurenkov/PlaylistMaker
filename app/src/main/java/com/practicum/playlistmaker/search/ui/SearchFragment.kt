@@ -2,8 +2,6 @@ package com.practicum.playlistmaker.search.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,27 +10,39 @@ import android.view.inputmethod.InputMethodManager
 import androidx.core.view.children
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.practicum.playlistmaker.databinding.FragmentSearchBinding
 import com.practicum.playlistmaker.search.domain.models.SearchScreenState
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.search.ui.track.TrackAdapter
 import com.practicum.playlistmaker.search.ui.track.history.HistoryTrackAdapter
+import com.practicum.playlistmaker.utils.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
     private val viewModel: SearchViewModel by viewModel()
 
     private var binding: FragmentSearchBinding? = null
-    private val handler = Handler(Looper.getMainLooper())
-    private val searchRunnable = Runnable { search() }
 
     private var history = mutableListOf<Track>()
+
+    private lateinit var onTrackClickDebounce: (Track) -> Unit
+    private lateinit var onSearchDebounce: (String) -> Unit
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        with(viewLifecycleOwner) {
+            onTrackClickDebounce = debounce(CLICK_DEBOUNCE_DELAY, lifecycleScope, false) {
+                    track -> viewModel.play(track)
+            }
+            onSearchDebounce = debounce(SEARCH_DEBOUNCE_DELAY, lifecycleScope, true) {
+                    expression -> viewModel.search(expression)
+            }
+        }
+
         binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding?.root
     }
@@ -59,15 +69,11 @@ class SearchFragment : Fragment() {
             searchHistory.adapter = HistoryTrackAdapter(
                 history,
                 { track, position ->
-                    if (position != 0) {
-                        with(searchHistory) {
-                            adapter?.notifyItemRemoved(position)
-                            adapter?.notifyItemInserted(0)
-                            adapter?.notifyItemRangeChanged(position, adapter!!.itemCount)
-                            scrollToPosition(0)
-                        }
+                    with(searchHistory) {
+                        adapter?.notifyItemMoved(position, 0)
+                        scrollToPosition(0)
                     }
-                    viewModel.play(track)
+                    onTrackClickDebounce(track)
                 },
                 {
                     viewModel.clearHistory()
@@ -95,10 +101,9 @@ class SearchFragment : Fragment() {
     }
 
     private fun search() {
-        handler.removeCallbacks(searchRunnable)
         binding?.let { hideChildren(it.searchResults) }
         val searchText = binding?.searchText?.text.toString()
-        viewModel.search(searchText)
+        onSearchDebounce(searchText)
     }
 
     private fun showTracks(tracks: List<Track>) {
@@ -107,7 +112,7 @@ class SearchFragment : Fragment() {
             binding?.searchNotFound?.visibility = View.VISIBLE
         } else {
             binding?.searchTracks?.adapter = TrackAdapter(tracks) { track, _ ->
-                viewModel.play(track)
+                onTrackClickDebounce(track)
             }
             binding?.searchTracks?.visibility = View.VISIBLE
         }
@@ -171,7 +176,7 @@ class SearchFragment : Fragment() {
                 } else {
                     searchClear.visibility = View.VISIBLE
                     hideSearchHistory()
-                    searchDebounce()
+                    onSearchDebounce(text.toString())
                 }
             }
         }
@@ -183,16 +188,8 @@ class SearchFragment : Fragment() {
         inputMethodManager?.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    private fun searchDebounce() {
-        with(handler) {
-            removeCallbacks(searchRunnable)
-            postDelayed(searchRunnable,
-                SEARCH_DEBOUNCE_DELAY
-            )
-        }
-    }
-
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 }

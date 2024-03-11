@@ -9,30 +9,37 @@ import com.practicum.playlistmaker.search.data.dto.TracksResponse
 import com.practicum.playlistmaker.search.data.network.NetworkClient
 import com.practicum.playlistmaker.search.data.network.impl.ITunesNetworkClient.Companion.HTTP_OK
 import com.practicum.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class TrackRepositoryImpl(private val context: Context, private val networkClient: NetworkClient) :
     TrackRepository {
-    override fun search(expression: String): Result<List<Track>> {
-        return runCatching {
-            val response = networkClient.doRequest(TracksRequest(expression)) as TracksResponse
-            if (response.resultCode == HTTP_OK)
-                response.results.map {
-                    with(it) {
-                        Track(
-                            trackId,
-                            collectionName,
-                            primaryGenreName,
-                            country,
-                            trackName,
-                            releaseDate,
-                            artistName,
-                            trackTimeMillis,
-                            artworkUrl100,
-                            previewUrl
-                        )
-                    }
+    override fun search(expression: String): Flow<Result<List<Track>>> {
+        return flow {
+            emit(
+                runCatching {
+                    val response =
+                        networkClient.doRequest(TracksRequest(expression)) as TracksResponse
+                    if (response.resultCode == HTTP_OK) {
+                        response.results.map {
+                            with(it) {
+                                Track(
+                                    trackId,
+                                    collectionName,
+                                    primaryGenreName,
+                                    country,
+                                    trackName,
+                                    releaseDate,
+                                    artistName,
+                                    trackTimeMillis,
+                                    artworkUrl100,
+                                    previewUrl
+                                )
+                            }
+                        }
+                    } else throw Exception()
                 }
-            else throw Exception()
+            )
         }
     }
 

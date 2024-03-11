@@ -3,31 +3,36 @@ package com.practicum.playlistmaker.player.ui
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.practicum.playlistmaker.player.domain.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.models.PlayerScreenState
 import com.practicum.playlistmaker.player.domain.models.PlayerState
 import com.practicum.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
-    ViewModel() {
+class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewModel() {
 
     private val playerScreenState = MutableLiveData<PlayerScreenState>()
     fun getPlayerScreenState(): LiveData<PlayerScreenState> = playerScreenState
 
-    init {
+    private var timerJob: Job? = null
+
+    private fun startTimer() {
         with(playerInteractor) {
-            onChangeStateListener = {
-                playerScreenState.value = PlayerScreenState.State(it)
-                if (it == PlayerState.PAUSED && currentPosition >= duration) {
-                    currentPosition = 0
+            timerJob = viewModelScope.launch {
+                while (state != PlayerState.PAUSED) {
+                    delay(REFRESH_POSITION_PERIOD)
+                    playerScreenState.value = PlayerScreenState(state, currentPosition)
                 }
             }
-            onChangePositionListener = { playerScreenState.value = PlayerScreenState.Position(it) }
         }
     }
 
     fun preparePlayer(track: Track) {
         playerInteractor.prepare(track)
+        startTimer()
     }
 
     fun pause() {
@@ -36,6 +41,7 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
 
     fun play() {
         playerInteractor.play()
+        startTimer()
     }
 
     fun playPause() {
@@ -46,12 +52,7 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) :
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        with(playerInteractor) {
-            clear()
-            onChangeStateListener = null
-            onChangePositionListener = null
-        }
+    companion object {
+        private const val REFRESH_POSITION_PERIOD = 300L
     }
 }

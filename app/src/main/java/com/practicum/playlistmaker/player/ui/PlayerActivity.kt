@@ -9,7 +9,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
-import com.practicum.playlistmaker.player.domain.models.PlayerScreenState
 import com.practicum.playlistmaker.player.domain.models.PlayerState
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.utils.dpToPx
@@ -45,10 +44,13 @@ class PlayerActivity : AppCompatActivity() {
 
         viewModel.preparePlayer(track)
         viewModel.getPlayerScreenState().observe(this) {
-            when (it) {
-                is PlayerScreenState.State -> setButtonState(it.state)
-                is PlayerScreenState.Position -> setPlayerProgress(it.position)
-            }
+            setButtonState(it.state)
+            setPlayerProgress(
+                when (it.state) {
+                    PlayerState.PLAYING, PlayerState.PAUSED -> it.position
+                    else -> 0
+                }
+            )
         }
     }
 
