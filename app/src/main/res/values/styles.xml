@@ -197,6 +197,12 @@
         <item name="tabTextColor">?attr/colorOnPrimary</item>
         <item name="tabIndicatorColor">?attr/colorOnPrimary</item>
     </style>
+
+    <style name="media.child.tracks" parent="media.child">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_marginTop">@dimen/dimen_16</item>
+    </style>
     
     <style name="nav_view">
         <item name="android:layout_width">match_parent</item>

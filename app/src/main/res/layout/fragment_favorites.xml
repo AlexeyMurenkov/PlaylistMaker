@@ -3,10 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/media" >
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/favorites_tracks"
+        style="@style/media.child.tracks"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
     <TextView
         android:id="@+id/media_empty_favorites"
         style="@style/media.child.imaged_text"
-        android:visibility="visible"
         android:text="@string/media_empty_favorites"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"

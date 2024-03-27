@@ -4,18 +4,24 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.practicum.playlistmaker.media.domain.FavoritesInteractor
 import com.practicum.playlistmaker.player.domain.PlayerInteractor
 import com.practicum.playlistmaker.player.domain.models.PlayerScreenState
 import com.practicum.playlistmaker.player.domain.models.PlayerState
 import com.practicum.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.launch
 
-class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewModel() {
+class PlayerViewModel(
+    private val playerInteractor: PlayerInteractor,
+    private val favoritesInteractor: FavoritesInteractor
+) : ViewModel() {
 
-    private val playerScreenState = MutableLiveData<PlayerScreenState>()
-    fun getPlayerScreenState(): LiveData<PlayerScreenState> = playerScreenState
+    private val _playerScreenState = MutableLiveData<PlayerScreenState>()
+    val playerScreenState: LiveData<PlayerScreenState> = _playerScreenState
 
     private var timerJob: Job? = null
 
@@ -24,7 +30,7 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
             timerJob = viewModelScope.launch {
                 while (state != PlayerState.PAUSED) {
                     delay(REFRESH_POSITION_PERIOD)
-                    playerScreenState.value = PlayerScreenState(state, currentPosition)
+                    _playerScreenState.value = PlayerScreenState.Progress(state, currentPosition)
                 }
             }
         }
@@ -33,6 +39,11 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
     fun preparePlayer(track: Track) {
         playerInteractor.prepare(track)
         startTimer()
+        viewModelScope.launch (Dispatchers.IO) {
+            _playerScreenState.postValue(
+                PlayerScreenState.Favorite(favoritesInteractor.isFavorite(track).single())
+            )
+        }
     }
 
     fun pause() {
@@ -49,6 +60,20 @@ class PlayerViewModel(private val playerInteractor: PlayerInteractor) : ViewMode
             PlayerState.PLAYING -> pause()
             PlayerState.PREPARED, PlayerState.PAUSED -> play()
             else -> {}
+        }
+    }
+
+    fun changeFavorite(track: Track) {
+        viewModelScope.launch (Dispatchers.IO) {
+            with(favoritesInteractor) {
+                val isFavorite = isFavorite(track).single()
+                if (isFavorite) {
+                    remove(track)
+                } else {
+                    add(track)
+                }
+                _playerScreenState.postValue(PlayerScreenState.Favorite(!isFavorite))
+            }
         }
     }
 

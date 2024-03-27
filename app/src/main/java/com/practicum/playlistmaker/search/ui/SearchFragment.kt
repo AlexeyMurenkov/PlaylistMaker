@@ -83,7 +83,7 @@ class SearchFragment : Fragment() {
             hideChildren(searchResults)
         }
 
-        viewModel.getPlayerScreenState().observe(viewLifecycleOwner) {
+        viewModel.playerScreenState.observe(viewLifecycleOwner) {
             when (it) {
                 is SearchScreenState.Process -> showProgressBar()
                 is SearchScreenState.Error -> showError()

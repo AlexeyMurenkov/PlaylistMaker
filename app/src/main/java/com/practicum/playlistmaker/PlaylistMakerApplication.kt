@@ -1,6 +1,8 @@
 package com.practicum.playlistmaker
 
 import android.app.Application
+import com.practicum.playlistmaker.media.di.mediaDataModule
+import com.practicum.playlistmaker.media.di.mediaDomainModule
 import com.practicum.playlistmaker.media.di.mediaViewModelModule
 import com.practicum.playlistmaker.player.di.playerDataModule
 import com.practicum.playlistmaker.player.di.playerDomainModule
@@ -25,7 +27,7 @@ class PlaylistMakerApplication : Application() {
                 searchViewModelModule, searchDataModule,
                 settingsViewModelModule, settingsDataModule,
                 playerViewModelModule, playerDomainModule, playerDataModule,
-                mediaViewModelModule,
+                mediaViewModelModule, mediaDomainModule, mediaDataModule,
                 utilsDataModule
             )
         }
