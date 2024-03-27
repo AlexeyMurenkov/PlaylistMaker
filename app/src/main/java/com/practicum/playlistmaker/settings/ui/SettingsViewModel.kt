@@ -11,16 +11,16 @@ class SettingsViewModel(
     private val sharingInteractor: SharingInteractor
 ) : ViewModel() {
 
-    private val stateIsDarkTheme = MutableLiveData<Boolean>()
-    fun getStateIsDarkTheme(): LiveData<Boolean> = stateIsDarkTheme
+    private val _stateIsDarkTheme = MutableLiveData<Boolean>()
+    val stateIsDarkTheme: LiveData<Boolean> = _stateIsDarkTheme
 
     init {
-        stateIsDarkTheme.value = settingsInteractor.isDarkMode
+        _stateIsDarkTheme.value = settingsInteractor.isDarkMode
     }
 
     fun switchTheme(isDarkTheme: Boolean) {
         settingsInteractor.isDarkMode = isDarkTheme
-        stateIsDarkTheme.value = isDarkTheme
+        _stateIsDarkTheme.value = isDarkTheme
         com.practicum.playlistmaker.utils.switchTheme(isDarkTheme)
     }
 

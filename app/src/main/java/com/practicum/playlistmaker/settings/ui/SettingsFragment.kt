@@ -40,7 +40,7 @@ class SettingsFragment : Fragment() {
             }
         }
 
-        viewModel.getStateIsDarkTheme().observe(viewLifecycleOwner) {
+        viewModel.stateIsDarkTheme.observe(viewLifecycleOwner) {
             binding!!.settingsDarkTheme.isChecked = it
         }
 

@@ -11,6 +11,6 @@ val mediaViewModelModule = module {
         PlaylistsViewModel(PlaylistsInteractorImpl())
     }
     viewModel {
-        FavoritesViewModel()
+        FavoritesViewModel(favoritesInteractor = get())
     }
 }

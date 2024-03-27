@@ -11,13 +11,13 @@ import kotlinx.coroutines.launch
 
 class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewModel() {
 
-    private val searchScreenState = MutableLiveData<SearchScreenState>()
-    fun getPlayerScreenState(): LiveData<SearchScreenState> = searchScreenState
+    private val _playerScreenState = MutableLiveData<SearchScreenState>()
+    val playerScreenState: LiveData<SearchScreenState> = _playerScreenState
 
     init {
-        searchScreenState.postValue(SearchScreenState.History(searchInteractor.history))
+        _playerScreenState.postValue(SearchScreenState.History(searchInteractor.history))
         searchInteractor.onChangeHistory = {
-            searchScreenState.postValue(SearchScreenState.History(it))
+            _playerScreenState.postValue(SearchScreenState.History(it))
         }
     }
 
@@ -31,12 +31,12 @@ class SearchViewModel(private val searchInteractor: SearchInteractor) : ViewMode
 
     fun search(expression: String) {
         if (expression.isBlank()) return
-        searchScreenState.value = SearchScreenState.Process()
+        _playerScreenState.value = SearchScreenState.Process()
         viewModelScope.launch {
             searchInteractor
                 .search(expression).collect {
-                    it.onFailure { searchScreenState.postValue(SearchScreenState.Error()) }
-                    it.onSuccess { searchScreenState.postValue(SearchScreenState.FoundTracks(it)) }
+                    it.onFailure { _playerScreenState.postValue(SearchScreenState.Error()) }
+                    it.onSuccess { _playerScreenState.postValue(SearchScreenState.FoundTracks(it)) }
                 }
         }
     }

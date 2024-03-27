@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.practicum.playlistmaker.R
 import com.practicum.playlistmaker.databinding.ActivityPlayerBinding
+import com.practicum.playlistmaker.player.domain.models.PlayerScreenState
 import com.practicum.playlistmaker.player.domain.models.PlayerState
 import com.practicum.playlistmaker.search.domain.models.Track
 import com.practicum.playlistmaker.utils.dpToPx
@@ -21,11 +22,12 @@ class PlayerActivity : AppCompatActivity() {
 
     private val viewModel: PlayerViewModel by viewModel()
     private lateinit var binding: ActivityPlayerBinding
+    private var track: Track? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val track: Track? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getSerializableExtra(Intent.ACTION_ATTACH_DATA, Track::class.java)
         } else {
             intent.getSerializableExtra(Intent.ACTION_ATTACH_DATA) as Track?
@@ -38,20 +40,37 @@ class PlayerActivity : AppCompatActivity() {
             setContentView(root)
             playerPlay.isEnabled = false
             playerPlay.setOnClickListener { viewModel.playPause() }
+            playerFavorites.setOnClickListener { viewModel.changeFavorite(track!!) }
             playerBack.setNavigationOnClickListener { finish() }
         }
         bind(track!!)
 
-        viewModel.preparePlayer(track)
-        viewModel.getPlayerScreenState().observe(this) {
-            setButtonState(it.state)
-            setPlayerProgress(
-                when (it.state) {
-                    PlayerState.PLAYING, PlayerState.PAUSED -> it.position
-                    else -> 0
-                }
-            )
+        viewModel.preparePlayer(track!!)
+        viewModel.playerScreenState.observe(this) {
+            when (it) {
+                is PlayerScreenState.Progress -> setProgress(it)
+                is PlayerScreenState.Favorite -> setFavorite(it)
+            }
         }
+    }
+
+    private fun setProgress(progress: PlayerScreenState.Progress) {
+        setPlayButtonState(progress.state)
+        setPlayerProgress(
+            when (progress.state) {
+                PlayerState.PLAYING, PlayerState.PAUSED -> progress.position
+                else -> 0
+            }
+        )
+    }
+
+    private fun setFavorite(favorite: PlayerScreenState.Favorite) {
+        binding.playerFavorites.setImageResource(
+            if (favorite.isFavorite)
+                R.drawable.remove_from_favorites
+            else
+                R.drawable.add_to_favorites
+        )
     }
 
     private fun bind(track: Track) {
@@ -94,7 +113,7 @@ class PlayerActivity : AppCompatActivity() {
             .into(binding.playerCover)
     }
 
-    private fun setButtonState(playerState: PlayerState) {
+    private fun setPlayButtonState(playerState: PlayerState) {
         binding.playerPlay.isEnabled = true
         when (playerState) {
             PlayerState.PLAYING -> binding.playerPlay.setImageResource(R.drawable.button_pause)
